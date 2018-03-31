@@ -1,0 +1,15 @@
+﻿.swal-overlay {
+    background-color: rgba(28, 30, 35, 0.98);
+}
+
+.swal-modal {
+    background-color: #25272e;
+}
+
+.swal-title{
+    color: #fff;
+}
+
+.swal-text {
+    color: #fff;
+}
