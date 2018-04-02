@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using WebERP.Data;
 using WebERP.Models;
 using WebERP.Services;
+using Microsoft.AspNetCore.Http;
 
 namespace WebERP
 {
@@ -34,6 +35,7 @@ namespace WebERP
                 .AddDefaultTokenProviders();
 
             // Add application services.
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();      
             services.AddTransient<IEmailSender, EmailSender>();
 
             services.AddMvc();

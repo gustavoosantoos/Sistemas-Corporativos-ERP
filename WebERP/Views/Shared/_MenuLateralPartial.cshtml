@@ -1,0 +1,14 @@
+﻿@inject UserManager<ApplicationUser> UserManager
+<!-- Sidebar menu-->
+<div class="app-sidebar__overlay" data-toggle="sidebar"></div>
+<aside class="app-sidebar">
+    <div class="app-sidebar__user">
+        <img class="app-sidebar__user-avatar" src="https://openclipart.org/download/247320/abstract-user-flat-4.svg" style="max-height:48px" alt="User Image">
+        <div>
+            <p class="app-sidebar__user-name">@UserManager.GetUserName(User)</p>
+        </div>
+    </div>
+    <ul class="app-menu">
+        <li><a class="app-menu__item @ViewData["HomeMenu"]" asp-controller="Home" asp-action="Index"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Dashboard</span></a></li>
+    </ul>
+</aside>

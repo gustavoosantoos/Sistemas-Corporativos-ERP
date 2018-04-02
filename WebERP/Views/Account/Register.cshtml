@@ -1,36 +1,94 @@
-﻿@model RegisterViewModel
+﻿@using System.Collections.Generic
+@using System.Linq
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Http.Authentication
+@model RegisterViewModel
+
 @{
-    ViewData["Title"] = "Register";
+    Layout = null;
 }
 
-<h2>@ViewData["Title"]</h2>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Cadastro - Web ERP</title>
 
-<div class="row">
-    <div class="col-md-4">
-        <form asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
-            <h4>Create a new account.</h4>
-            <hr />
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Email"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Password"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ConfirmPassword"></label>
-                <input asp-for="ConfirmPassword" class="form-control" />
-                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-            </div>
-            <button type="submit" class="btn btn-default">Register</button>
-        </form>
+    <link rel="stylesheet" type="text/css" href="~/css/main.css">
+    <!-- Font-icon css-->
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .login-content .login-box{
+            min-height: 600px;
+        }
+    </style>
+</head>
+<body class="pace-done">
+    <div class="pace pace-inactive">
+        <div class="pace-progress" data-progress-text="100%" data-progress="99" style="transform: translate3d(100%, 0px, 0px);">
+            <div class="pace-progress-inner"></div>
+        </div>
+        <div class="pace-activity"></div>
     </div>
-</div>
+    <section class="material-half-bg">
+        <div class="cover"></div>
+    </section>
+    <section class="login-content">
+        <div class="logo">
+            <h1>Web ERP</h1>
+        </div>
+        <div class="login-box">
+            <form class="login-form" asp-route-returnurl="@ViewData["ReturnUrl"]">
+                <h3 class="login-head"><i class="fa fa-lg fa-fw fa-user"></i>CADASTRE-SE</h3>
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-group">
+                    <label class="control-label">USUÁRIO</label>
+                    <input asp-for="UserName" class="form-control" type="text" placeholder="Email" autofocus="">
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">E-MAIL</label>
+                    <input asp-for="Email" class="form-control"  placeholder="Email">
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">SENHA</label>
+                    <input asp-for="Password" class="form-control" type="password" placeholder="Senha">
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">CONFIRMAÇÃO DE SENHA</label>
+                    <input asp-for="ConfirmPassword" class="form-control" type="password" placeholder="Confirmação">
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <div class="utility">
+                        <p class="semibold-text mb-2"><a asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]">Já possui uma conta? Logue-se.</a></p>
+                    </div>
+                </div>
+                <div class="form-group btn-container">
+                    <button class="btn btn-primary btn-block"><i class="fa fa-sign-in fa-lg fa-fw"></i>CADASTRAR-SE</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Essential javascripts for application to work-->
+    <script src="~/js/jquery-3.2.1.min.js"></script>
+    <script src="~/js/popper.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/main.js"></script>
+    <!-- The javascript plugin to display page loading on top-->
+    <script src="~/js/plugins/pace.min.js"></script>
+    <script src="~/js/bootstrap-notify.min.js"></script>
+</body>
+</html>
+
 
 @section Scripts {
+    <script>
+        @Html.Raw(TempData["StartupScript"])
+    </script>
     @await Html.PartialAsync("_ValidationScriptsPartial")
 }
+
