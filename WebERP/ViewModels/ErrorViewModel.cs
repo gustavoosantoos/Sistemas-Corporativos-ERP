@@ -1,6 +1,4 @@
-using System;
-
-namespace WebERP.Models
+namespace WebERP.ViewModels
 {
     public class ErrorViewModel
     {

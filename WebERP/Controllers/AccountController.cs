@@ -12,9 +12,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using WebERP.Extensions;
 using WebERP.Models;
-using WebERP.Models.AccountViewModels;
 using WebERP.Services;
 using WebERP.Utils;
+using WebERP.ViewModels;
+using WebERP.ViewModels.AccountViewModels;
 
 namespace WebERP.Controllers
 {
