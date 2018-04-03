@@ -7,14 +7,14 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using System;
 using WebERP.Data;
-using WebERP.Models.Compras;
 
 namespace WebERP.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180402225653_AddedPersonalInformationsOfUser")]
+    partial class AddedPersonalInformationsOfUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -148,9 +148,7 @@ namespace WebERP.Data.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd");
 
-                    b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasMaxLength(100);
+                    b.Property<string>("Nome");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256);
@@ -166,9 +164,7 @@ namespace WebERP.Data.Migrations
 
                     b.Property<string>("SecurityStamp");
 
-                    b.Property<string>("Sobrenome")
-                        .IsRequired()
-                        .HasMaxLength(100);
+                    b.Property<string>("Sobrenome");
 
                     b.Property<bool>("TwoFactorEnabled");
 
@@ -186,168 +182,6 @@ namespace WebERP.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
-                });
-
-            modelBuilder.Entity("WebERP.Models.Compras.Orcamento", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("FornecedorId");
-
-                    b.Property<float>("PrecoUnitario");
-
-                    b.Property<int>("SolicitacaoId");
-
-                    b.Property<int>("Status");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FornecedorId");
-
-                    b.HasIndex("SolicitacaoId");
-
-                    b.ToTable("Orcamentos");
-                });
-
-            modelBuilder.Entity("WebERP.Models.Compras.Pedido", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("DataCriacao");
-
-                    b.Property<int>("OrcamentoId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrcamentoId");
-
-                    b.ToTable("Pedidos");
-                });
-
-            modelBuilder.Entity("WebERP.Models.Compras.Solicitacao", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("Data");
-
-                    b.Property<int>("ProdutoId");
-
-                    b.Property<float>("QuantidadeSolicitada");
-
-                    b.Property<int>("SolicitanteId");
-
-                    b.Property<string>("SolicitanteId1");
-
-                    b.Property<int>("Status");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProdutoId");
-
-                    b.HasIndex("SolicitanteId1");
-
-                    b.ToTable("Solicitacoes");
-                });
-
-            modelBuilder.Entity("WebERP.Models.Estoque.EnderecoFornecedor", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Bairro")
-                        .HasMaxLength(100);
-
-                    b.Property<string>("Cep")
-                        .HasMaxLength(10);
-
-                    b.Property<string>("Cidade")
-                        .HasMaxLength(100);
-
-                    b.Property<string>("Estado")
-                        .HasMaxLength(2);
-
-                    b.Property<string>("Logradouro")
-                        .HasMaxLength(200);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("EnderecoFornecedores");
-                });
-
-            modelBuilder.Entity("WebERP.Models.Estoque.Fornecedor", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Cnpj");
-
-                    b.Property<string>("Email");
-
-                    b.Property<int?>("EnderecoId");
-
-                    b.Property<string>("NomeFantasia");
-
-                    b.Property<string>("RazaoSocial");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EnderecoId");
-
-                    b.ToTable("Fornecedores");
-                });
-
-            modelBuilder.Entity("WebERP.Models.Estoque.Produto", b =>
-                {
-                    b.Property<int>("ProdutoId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Descricao");
-
-                    b.Property<int>("Minimo");
-
-                    b.Property<string>("Nome");
-
-                    b.Property<int>("Quantidade");
-
-                    b.Property<string>("UnidadeDeMedida");
-
-                    b.HasKey("ProdutoId");
-
-                    b.ToTable("Produtos");
-                });
-
-            modelBuilder.Entity("WebERP.Models.Estoque.ProdutoPorFornecedor", b =>
-                {
-                    b.Property<int>("ProdutoId");
-
-                    b.Property<int>("FornecedorId");
-
-                    b.HasKey("ProdutoId", "FornecedorId");
-
-                    b.HasIndex("FornecedorId");
-
-                    b.ToTable("ProdutorPorFornecedores");
-                });
-
-            modelBuilder.Entity("WebERP.Models.Estoque.TelefoneFornecedor", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<byte>("Ddd");
-
-                    b.Property<int?>("FornecedorId");
-
-                    b.Property<string>("Numero");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FornecedorId");
-
-                    b.ToTable("TelefoneFornecedores");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -393,66 +227,6 @@ namespace WebERP.Data.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("WebERP.Models.Compras.Orcamento", b =>
-                {
-                    b.HasOne("WebERP.Models.Estoque.Fornecedor", "Fornecedor")
-                        .WithMany()
-                        .HasForeignKey("FornecedorId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("WebERP.Models.Compras.Solicitacao", "Solicitacao")
-                        .WithMany("Orcamentos")
-                        .HasForeignKey("SolicitacaoId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("WebERP.Models.Compras.Pedido", b =>
-                {
-                    b.HasOne("WebERP.Models.Compras.Orcamento", "Orcamento")
-                        .WithMany()
-                        .HasForeignKey("OrcamentoId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("WebERP.Models.Compras.Solicitacao", b =>
-                {
-                    b.HasOne("WebERP.Models.Estoque.Produto", "Produto")
-                        .WithMany()
-                        .HasForeignKey("ProdutoId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("WebERP.Models.ApplicationUser", "Solicitante")
-                        .WithMany()
-                        .HasForeignKey("SolicitanteId1");
-                });
-
-            modelBuilder.Entity("WebERP.Models.Estoque.Fornecedor", b =>
-                {
-                    b.HasOne("WebERP.Models.Estoque.EnderecoFornecedor", "Endereco")
-                        .WithMany()
-                        .HasForeignKey("EnderecoId");
-                });
-
-            modelBuilder.Entity("WebERP.Models.Estoque.ProdutoPorFornecedor", b =>
-                {
-                    b.HasOne("WebERP.Models.Estoque.Fornecedor", "Fornecedor")
-                        .WithMany()
-                        .HasForeignKey("FornecedorId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("WebERP.Models.Estoque.Produto", "Produto")
-                        .WithMany()
-                        .HasForeignKey("ProdutoId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("WebERP.Models.Estoque.TelefoneFornecedor", b =>
-                {
-                    b.HasOne("WebERP.Models.Estoque.Fornecedor")
-                        .WithMany("Telefone")
-                        .HasForeignKey("FornecedorId");
                 });
 #pragma warning restore 612, 618
         }

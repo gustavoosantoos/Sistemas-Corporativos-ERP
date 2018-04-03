@@ -1,4 +1,6 @@
-﻿@inject UserManager<ApplicationUser> UserManager
+﻿@using WebERP.Extensions
+@using WebERP.Utils.Identity
+@inject UserManager<ApplicationUser> UserManager
 <!-- Sidebar menu-->
 <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
 <aside class="app-sidebar">
@@ -6,9 +8,31 @@
         <img class="app-sidebar__user-avatar" src="https://openclipart.org/download/247320/abstract-user-flat-4.svg" style="max-height:48px" alt="User Image">
         <div>
             <p class="app-sidebar__user-name">@UserManager.GetUserName(User)</p>
+            <p class="app-sidebar__user-designation">@ErpRoles.RoleForName(User.Roles().FirstOrDefault()).FormmatedName</p>
         </div>
     </div>
     <ul class="app-menu">
-        <li><a class="app-menu__item @ViewData["HomeMenu"]" asp-controller="Home" asp-action="Index"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Dashboard</span></a></li>
+        <li>
+            <a class="app-menu__item @ViewData["HomeMenu"]" asp-controller="Home" asp-action="Index">
+                <i class="app-menu__icon fa fa-dashboard"></i>
+                <span class="app-menu__label">Dashboard</span>
+            </a>
+        </li>
+        @if (User.IsInRole(ErpRoleNames.SuperAdmin))
+        {
+            <li class="treeview">
+                <a class="app-menu__item" href="#" data-toggle="treeview">
+                    <i class="app-menu__icon fa fa-users"></i>
+                    <span class="app-menu__label">Administração</span><i class="treeview-indicator fa fa-angle-right"></i>
+                </a>
+                <ul class="treeview-menu">
+                    <li>
+                        <a class="treeview-item @ViewData["GerenciamentoDeUsuarios"]" asp-controller="Home" asp-action="Index">
+                            <i class="icon fa fa-circle-o"></i>&nbsp;Usuários
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        }
     </ul>
 </aside>

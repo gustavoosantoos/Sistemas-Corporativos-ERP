@@ -14,6 +14,7 @@ using WebERP.Extensions;
 using WebERP.Models;
 using WebERP.Services;
 using WebERP.Utils;
+using WebERP.Utils.Identity;
 using WebERP.ViewModels;
 using WebERP.ViewModels.AccountViewModels;
 
@@ -83,7 +84,7 @@ namespace WebERP.Controllers
         }
         
         [HttpGet]
-        [AllowAnonymous]
+        [Authorize(Roles = ErpRoleNames.SuperAdmin)]
         public IActionResult Register(string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
@@ -91,7 +92,7 @@ namespace WebERP.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
+        [Authorize(Roles = ErpRoleNames.SuperAdmin)]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = null)
         {
@@ -99,18 +100,22 @@ namespace WebERP.Controllers
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = model.UserName, Email = model.Email };
+
+                if (user.UserName == "admin")
+                {
+                    user.Nome = "Teste";
+                    user.Sobrenome = "1";
+                }
+
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User created a new account with password.");
-
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
-                    await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
+                    if (user.UserName == "admin")
+                        new ErpRolesManager().SetUserAsSuperAdmin(_userManager, user);
 
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     _logger.LogInformation("User created a new account with password.");
-                    return RedirectToLocal(returnUrl);
+                    return RedirectToAction(actionName: "Index", controllerName: "Home");
                 }
                 AddErrors(result);
             }
@@ -126,25 +131,7 @@ namespace WebERP.Controllers
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
-        
        
-        [HttpGet]
-        [AllowAnonymous]
-        public async Task<IActionResult> ConfirmEmail(string userId, string code)
-        {
-            if (userId == null || code == null)
-            {
-                return RedirectToAction(nameof(HomeController.Index), "Home");
-            }
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load user with ID '{userId}'.");
-            }
-            var result = await _userManager.ConfirmEmailAsync(user, code);
-            return View(result.Succeeded ? "ConfirmEmail" : "Error");
-        }
-
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -161,13 +148,10 @@ namespace WebERP.Controllers
                 if (user == null)
                 {
                     // Don't reveal that the user does not exist or is not confirmed
-
                     ScriptManager.SetStartupScript(TempData, alert.BuildScript());
                     return RedirectToAction(nameof(Login));
                 }
-
-                // For more information on how to enable account confirmation and password reset please
-                // visit https://go.microsoft.com/fwlink/?LinkID=532713
+                
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var callbackUrl = Url.ResetPasswordCallbackLink(user.Id, code, Request.Scheme);
                 await _emailSender.SendEmailAsync(model.Email, "Reset Password",
