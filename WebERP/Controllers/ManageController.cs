@@ -52,7 +52,7 @@ namespace WebERP.Controllers
                 throw new ApplicationException($"Não foi possível carregar o usuário com ID: '{_userManager.GetUserId(User)}'.");
             }
 
-            var model = new IndexViewModel
+            var model = new UserViewModel
             {
                 Username = user.UserName,
                 Email = user.Email,
@@ -67,7 +67,7 @@ namespace WebERP.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(IndexViewModel model)
+        public async Task<IActionResult> Index(UserViewModel model)
         {
             if (!ModelState.IsValid)
             {

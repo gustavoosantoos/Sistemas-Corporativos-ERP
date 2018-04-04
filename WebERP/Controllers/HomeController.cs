@@ -17,12 +17,11 @@ namespace WebERP.Controllers
     {
         public HomeController(UserManager<ApplicationUser> userManager, IHttpContextAccessor accessor) : base(userManager, accessor)
         {
+
         }
 
         public IActionResult Index()
         {
-            var roles = User.Roles();
-
             return View();
         }
 

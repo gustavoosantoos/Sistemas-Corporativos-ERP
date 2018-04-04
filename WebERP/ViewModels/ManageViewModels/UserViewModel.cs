@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using WebERP.Utils.Identity;
 
 namespace WebERP.ViewModels.ManageViewModels
 {
-    public class IndexViewModel
+    public class UserViewModel
     {
         public string Username { get; set; }
         
@@ -23,5 +24,7 @@ namespace WebERP.ViewModels.ManageViewModels
         [Required]
         [StringLength(100)]
         public string Sobrenome { get; set; }
+
+        public ErpRole HigherRole { get; set; }
     }
 }

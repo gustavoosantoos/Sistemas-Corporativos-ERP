@@ -1,0 +1,55 @@
+﻿@model IEnumerable<WebERP.ViewModels.ManageViewModels.UserViewModel>
+@{
+    ViewData["Title"] = "Gerenciamento de usuários";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="app-title">
+    <div>
+        <h1><i class="fa fa-users"></i> Gerenciamento de Usuários</h1>
+        <p>É nessa area que você controla os usuários e seus papeis dentro da sua organização.</p>
+    </div>
+    <ul class="app-breadcrumb breadcrumb">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item"><a href="#">Usuários</a></li>
+    </ul>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="tile">
+            <div class="tile-body">
+                <table class="table table-hover table-bordered table-responsive-lg" id="users-table">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Sobrenome</th>
+                            <th>Contato</th>
+                            <th>Role Principal</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model)
+                        {
+                            <tr>
+                                <td>@user.Nome</td>
+                                <td>@user.Sobrenome</td>
+                                <td>@user.PhoneNumber</td>
+                                <td>@user.HigherRole.FormmatedName</td>
+                                <td></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script>
+        $('#users-table').DataTable();
+    </script>
+}
+
