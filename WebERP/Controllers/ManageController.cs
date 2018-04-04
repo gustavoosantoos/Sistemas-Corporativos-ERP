@@ -49,7 +49,7 @@ namespace WebERP.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                throw new ApplicationException($"Não foi possível carregar o usuário com ID: '{_userManager.GetUserId(User)}'.");
             }
 
             var model = new IndexViewModel
@@ -57,7 +57,8 @@ namespace WebERP.Controllers
                 Username = user.UserName,
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
-                IsEmailConfirmed = user.EmailConfirmed,
+                Nome = user.Nome,
+                Sobrenome = user.Sobrenome,
                 StatusMessage = StatusMessage
             };
 
@@ -79,6 +80,12 @@ namespace WebERP.Controllers
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
+            user.Nome = model.Nome;
+            user.Sobrenome = model.Sobrenome;
+            user.PhoneNumber = model.PhoneNumber;
+
+            await _userManager.UpdateAsync(user);
+
             var email = user.Email;
             if (model.Email != email)
             {
@@ -98,8 +105,9 @@ namespace WebERP.Controllers
                     throw new ApplicationException($"Unexpected error occurred setting phone number for user with ID '{user.Id}'.");
                 }
             }
-
-            StatusMessage = "Your profile has been updated";
+            
+            SweetAlertBuilder builder = new SweetAlertBuilder("Perfil atualizado", "Seu perfil foi atualizado com sucesso!", MessageType.Success);
+            ScriptManager.SetStartupScript(TempData, builder.BuildScript());
             return RedirectToAction(nameof(Index));
         }
 
