@@ -11068,6 +11068,7 @@ body.stop-scrolling {
     border-top: none;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
+    margin-top: 50px;
 }
 
 .select2-search--dropdown {
@@ -13309,6 +13310,7 @@ be a descendant of the grid when it is being dragged.
     .btn .fa {
         font-size: 14px;
         margin-right: 5px;
+        margin-bottom: 3px;
         vertical-align: middle;
     }
 

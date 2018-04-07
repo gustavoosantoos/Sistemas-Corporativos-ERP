@@ -17,6 +17,10 @@
 <div class="row">
     <div class="col-md-12">
         <div class="tile">
+            <div class="tile-title-w-btn">
+                <h3 class="title">Usuários</h3>
+                <p><a class="btn btn-success icon-btn" asp-controller="Users" asp-action="UserForm"><i class="fa fa-plus"></i>Adicionar Usuário</a></p>
+            </div>
             <div class="tile-body">
                 <table class="table table-hover table-bordered table-responsive-lg" id="users-table">
                     <thead>
@@ -36,7 +40,14 @@
                                 <td>@user.Sobrenome</td>
                                 <td>@user.PhoneNumber</td>
                                 <td>@user.HigherRole.FormmatedName</td>
-                                <td></td>
+                                <td class="text-right">
+                                    <a class="btn btn-primary btn-sm" asp-action="UserForm" asp-route-id="@user.Id">
+                                        <i class="fa fa-pencil"></i>Editar
+                                    </a>
+                                    <button class="btn btn-danger btn-sm js-delete-user" data-user-id="@user.Id">
+                                        <i class="fa fa-trash"></i>Apagar
+                                    </button>
+                                </td>
                             </tr>
                         }
                     </tbody>
@@ -47,9 +58,51 @@
 </div>
 
 @section Scripts
-{
+    {
     <script>
-        $('#users-table').DataTable();
+        $(document).ready(function () {
+            $('#users-table').DataTable();
+
+            $('.js-delete-user').click(function (e) {
+                var userid = $(this).attr("data-user-id");
+
+                swal({
+                    title: "Apagar usuário?",
+                    text: "Não será possível desfazer essa ação!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Sim, delete isso!",
+                    cancelButtonText: "Não, cancele por favor!",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                }, function (isConfirm) {
+                    if (isConfirm) {
+                        $.ajax({
+                            url: '/api/Account/' + userid,
+                            type: 'DELETE',
+                            success: function () {
+                                swal({
+                                    title: "Apagado!",
+                                    text: "O usuário foi apagado com sucesso.",
+                                    type: "success"
+                                }, function (isConfirm) {
+                                    location.reload();
+                                });
+                            },
+                            error: function () {
+                                swal({
+                                    title: "Algo deu errado. :(",
+                                    text: "Algo aconteceu enquanto a operação era executada.",
+                                    type: "error"
+                                });
+                            }
+                        });
+                    } else {
+                        swal("Cancelado", "O usuário não foi apagado, não se preocupe. :)", "error");
+                    }
+                });
+            });
+        });
     </script>
 }
 
