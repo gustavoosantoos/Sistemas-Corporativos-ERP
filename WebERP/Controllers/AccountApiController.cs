@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using WebERP.Data.Repositories;
 using WebERP.Extensions;
 using WebERP.Models;
 using WebERP.Utils.Identity;
@@ -19,7 +20,11 @@ namespace WebERP.Controllers
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public AccountApiController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IHttpContextAccessor accessor) : base(userManager, accessor)
+        public AccountApiController (SignInManager<ApplicationUser> signInManager,
+                                     UserManager<ApplicationUser> userManager, 
+                                     UserRepository repository,
+                                     IHttpContextAccessor accessor)
+            : base(userManager, repository, accessor)
         {
             _signInManager = signInManager;
         }
@@ -36,32 +41,31 @@ namespace WebERP.Controllers
                 user.Sobrenome = "1";
             }
 
-            var result = await UserManager.CreateAsync(user, password);
-            if (result.Succeeded)
-            {
-                if (user.UserName == "admin")
-                    new ErpRolesManager().SetUserAsSuperAdmin(UserManager, user);
+            var result = UserRepository.Create(user, password);
+            if (!result.Succeeded)
+                return BadRequest(result);
+            
+            if (user.UserName == "admin")
+                UserRepository.SetUserAsSuperAdmin(user);
 
-                await _signInManager.SignInAsync(user, isPersistent: false);
-                return Created("", null);
-            }
+            UserRepository.SetUserAsSuperAdmin(user);
 
-            return BadRequest(result);
+            await _signInManager.SignInAsync(user, isPersistent: false);
+            return Created("", null);
+
         }
 
         [HttpDelete, Route("{id}", Name = "DeleteUser")]
-        public async Task<IActionResult> Delete(string id)
+        public IActionResult Delete(string id)
         {
-            var currentUser = await UserManager.GetUserAsync(User);
-            if (currentUser.HigherRole(UserManager) != ErpRoles.SuperAdmin)
+            if (UserRepository.GetHigherRole(CurrentUser) != ErpRolesManager.SuperAdmin)
                 return Unauthorized();
 
-            var userToDelete = UserManager.Users.FirstOrDefault(e => e.Id == id);
+            var userToDelete = UserRepository.FindById(id);
             if (userToDelete == null)
                 return NotFound("Usuário não encontrado.");
 
-            await UserManager.DeleteAsync(userToDelete);
-
+            UserRepository.Delete(userToDelete);
             return Ok();
         }
     }

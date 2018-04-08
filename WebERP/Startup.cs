@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ using WebERP.Data;
 using WebERP.Models;
 using WebERP.Services;
 using Microsoft.AspNetCore.Http;
+using WebERP.Data.Repositories;
 
 namespace WebERP
 {
@@ -33,11 +35,14 @@ namespace WebERP
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+            
 
             // Add application services.
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();      
             services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<UserRepository>();
 
+            services.AddAutoMapper();
             services.AddMvc();
         }
 

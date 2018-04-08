@@ -15,28 +15,28 @@ namespace WebERP.Tests.AuthorizationTests
         [Test]
         public void TestSuperAdminHigherRole()
         {
-            var rolesToTest = ErpRoles.GetAllRoles();
-            var higherRole = IdentityExtensions.GetHigherRole(rolesToTest.Select(e => e.RoleName).ToList());
+            var rolesToTest = ErpRolesManager.GetAllRoles();
+            var higherRole = ErpRolesManager.GetHigherRole(rolesToTest.Select(e => e.RoleName).ToList());
 
-            Assert.AreEqual(ErpRoles.SuperAdmin, higherRole);
+            Assert.AreEqual(ErpRolesManager.SuperAdmin, higherRole);
         }
 
         [Test]
         public void TestSupervisorComprasAsHigherRole()
         {
-            var rolesToTest = ErpRoles.GetAllRoles(Departamento.Compras);
-            var higherRole = IdentityExtensions.GetHigherRole(rolesToTest.Select(e => e.RoleName).ToList());
+            var rolesToTest = ErpRolesManager.GetAllRoles(Departamento.Compras);
+            var higherRole = ErpRolesManager.GetHigherRole(rolesToTest.Select(e => e.RoleName).ToList());
 
-            Assert.AreEqual(ErpRoles.SupervisorDeCompras, higherRole);
+            Assert.AreEqual(ErpRolesManager.SupervisorDeCompras, higherRole);
         }
 
         [Test]
         public void TestSupervisorEstoqueAsHigherRole()
         {
-            var rolesToTest = ErpRoles.GetAllRoles(Departamento.Estoque);
-            var higherRole = IdentityExtensions.GetHigherRole(rolesToTest.Select(e => e.RoleName).ToList());
+            var rolesToTest = ErpRolesManager.GetAllRoles(Departamento.Estoque);
+            var higherRole = ErpRolesManager.GetHigherRole(rolesToTest.Select(e => e.RoleName).ToList());
 
-            Assert.AreEqual(ErpRoles.SupervisorDeEstoque, higherRole);
+            Assert.AreEqual(ErpRolesManager.SupervisorDeEstoque, higherRole);
         }
 
         [Test]
@@ -44,21 +44,21 @@ namespace WebERP.Tests.AuthorizationTests
         {
             var rolesToTest = new List<ErpRole>()
             {
-                ErpRoles.SupervisorDeCompras,
-                ErpRoles.Estoque
+                ErpRolesManager.SupervisorDeCompras,
+                ErpRolesManager.Estoque
             };
 
-            var higherRole = IdentityExtensions.GetHigherRole(rolesToTest.Select(e => e.RoleName).ToList());
-            Assert.AreEqual(ErpRoles.SupervisorDeCompras, higherRole);
+            var higherRole = ErpRolesManager.GetHigherRole(rolesToTest.Select(e => e.RoleName).ToList());
+            Assert.AreEqual(ErpRolesManager.SupervisorDeCompras, higherRole);
         }
 
         [Test]
         public void TestAvailableRoles()
         {
-            var superAdminRole = ErpRoles.SuperAdmin;
+            var superAdminRole = ErpRolesManager.SuperAdmin;
             var availableRoles = superAdminRole.AuthorizedRolesToCreate();
 
-            var allRoles = ErpRoles.GetAllRoles();
+            var allRoles = ErpRolesManager.GetAllRoles();
             
             allRoles.ForEach(e => Assert.Contains(e, availableRoles));
         }

@@ -8,7 +8,7 @@
         <img class="app-sidebar__user-avatar" src="https://openclipart.org/download/247320/abstract-user-flat-4.svg" style="max-height:48px" alt="User Image">
         <div>
             <p class="app-sidebar__user-name">@UserManager.GetUserName(User)</p>
-            <p class="app-sidebar__user-designation">@IdentityExtensions.GetHigherRole(User.Roles()).FormmatedName</p>
+            <p class="app-sidebar__user-designation">@ErpRolesManager.GetHigherRole(User.Roles()).FormmatedName</p>
         </div>
     </div>
     <ul class="app-menu">

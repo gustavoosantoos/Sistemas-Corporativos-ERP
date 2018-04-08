@@ -30,32 +30,12 @@ namespace WebERP.Extensions
 
         public static List<ErpRole> ClaimToErpRoles(this IList<Claim> claims)
         {
-            return claims.Roles().Select(ErpRoles.RoleForName).ToList();
+            return claims.Roles().Select(ErpRolesManager.RoleForName).ToList();
         }
-
-        public static ErpRole HigherRole(this ApplicationUser user, UserManager<ApplicationUser> manager)
-        {
-            Task<IList<Claim>> claims = manager.GetClaimsAsync(user);
-            claims.Wait();
-
-            var roles = claims.Result
-                .Where(c => c.Type == ClaimTypes.Role)
-                .Select(c => c.Value)
-                .ToList();
-
-            ErpRole higherRole = GetHigherRole(roles);
-
-            return higherRole;
-        }
-
-        public static ErpRole GetHigherRole(List<string> roles)
-        {
-            return roles.Select(ErpRoles.RoleForName).OrderBy(e => e.Nivel).FirstOrDefault();
-        }
-
+    
         public static List<ErpRole> AuthorizedRolesToCreate(this ErpRole role)
         {
-            var allRoles = ErpRoles.GetAllRoles();
+            var allRoles = ErpRolesManager.GetAllRoles();
             if (role.RoleName == ErpRoleNames.SuperAdmin)
                 return allRoles;
 
@@ -67,15 +47,15 @@ namespace WebERP.Extensions
 
         public static List<ErpRole> AuthorizedRolesToCreate(this IList<ErpRole> roles)
         {
-            var allRoles = ErpRoles.GetAllRoles();
-            if (roles.Contains(ErpRoles.SuperAdmin))
+            var allRoles = ErpRolesManager.GetAllRoles();
+            if (roles.Contains(ErpRolesManager.SuperAdmin))
                 return allRoles;
 
             var authorizedRoles = new List<ErpRole>();
 
             foreach (var role in roles.GroupBy(e => e.Departamento))
             {
-                var higherRoleInDep = GetHigherRole(role.Select(e => e.RoleName).ToList());
+                var higherRoleInDep = ErpRolesManager.GetHigherRole(role.Select(e => e.RoleName).ToList());
                 authorizedRoles.AddRange(higherRoleInDep.AuthorizedRolesToCreate());
             }
 

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using WebERP.Data.Repositories;
 using WebERP.Extensions;
 using WebERP.Models;
 
@@ -15,7 +16,8 @@ namespace WebERP.Controllers
     [Authorize]
     public class HomeController : BaseController
     {
-        public HomeController(UserManager<ApplicationUser> userManager, IHttpContextAccessor accessor) : base(userManager, accessor)
+        public HomeController(UserManager<ApplicationUser> userManager, UserRepository repository, IHttpContextAccessor accessor) 
+            : base(userManager, repository, accessor)
         {
 
         }

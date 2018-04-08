@@ -8,7 +8,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 using WebERP.Data;
+using WebERP.Data.Repositories;
 using WebERP.Extensions;
 using WebERP.Models;
 using WebERP.Utils;
@@ -18,72 +20,63 @@ using WebERP.ViewModels.ManageViewModels;
 
 namespace WebERP.Controllers
 {
-    //[Authorize(Roles = ErpRoleNames.SuperAdmin)]
+    [Authorize]
     public class UsersController : BaseController
     {
-        public UsersController(UserManager<ApplicationUser> userManager, IHttpContextAccessor accessor) : base(userManager, accessor)
+        public UsersController(UserManager<ApplicationUser> userManager, UserRepository repository, IHttpContextAccessor accessor) 
+            : base(userManager, repository, accessor)
         {
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            ViewData["GerenciamentoDeUsuarios"] = "active";
+            RegisterActivePage();
 
-            var currentUser = await UserManager.GetUserAsync(User);
-
-            var users = UserManager.Users.ToList().Select(e => new UserViewModel()
+            var users = UserRepository.Users().Select(e => new UserViewModel()
             {
                 Id = e.Id,
                 Nome = e.Nome,
                 Sobrenome = e.Sobrenome,
                 Username = e.UserName,
                 PhoneNumber = e.PhoneNumber,
-                HigherRole = e.HigherRole(UserManager)
-            }).Where(e => currentUser.HigherRole(UserManager).Nivel < e.HigherRole.Nivel).ToList();
+                HigherRole = UserRepository.GetHigherRole(e)
+            }).Where(e => UserRepository.GetHigherRole(CurrentUser).Nivel < e.HigherRole.Nivel).ToList();
 
             return View(users);
         }
 
         [HttpGet]
-        public async Task<IActionResult> UserForm(string id)
+        public IActionResult UserForm(string id)
         {
-            ViewData["GerenciamentoDeUsuarios"] = "active";
+            RegisterActivePage();
 
             RegisterViewModel viewModel = new RegisterViewModel();
-            var currentUser = await UserManager.GetUserAsync(User);
 
             if (!string.IsNullOrWhiteSpace(id))
             {
-                var userToEdit = UserManager.Users.FirstOrDefault(e => e.Id == id);
+                var userToEdit = UserRepository.FindById(id);
                 if (userToEdit == null)
                     return BadRequest();
-
-                var roles = UserManager.GetClaimsAsync(userToEdit);
 
                 viewModel.Nome = userToEdit.Nome;
                 viewModel.Sobrenome = userToEdit.Sobrenome;
                 viewModel.UserName = userToEdit.UserName;
                 viewModel.Email = userToEdit.Email;
-
-                roles.Wait();
-                viewModel.UserRoles = roles.Result.Roles();
+                viewModel.UserRoles = UserRepository.GetUserRoles(userToEdit).ToList();
             }
 
-            var currentUserClaims = await UserManager.GetClaimsAsync(currentUser);
             ViewBag.AvailableRoles = new MultiSelectList(
-                 currentUserClaims.ClaimToErpRoles().AuthorizedRolesToCreate(),
+                 UserRepository.GetAuthorizedRolesToCreate(CurrentUser),
                  nameof(ErpRole.RoleName), nameof(ErpRole.FormmatedName), viewModel.UserRoles);
 
             return View(viewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> UserForm(RegisterViewModel model)
+        public IActionResult UserForm(RegisterViewModel model)
         {
-            ViewData["GerenciamentoDeUsuarios"] = "active";
-
-            var currentUser = await UserManager.GetUserAsync(User);
+            RegisterActivePage();
 
             if (!model.IsNewUser)
             {
@@ -93,7 +86,7 @@ namespace WebERP.Controllers
             if (ModelState.IsValid == false)
             {
                 ViewBag.AvailableRoles = new MultiSelectList(
-                    currentUser.HigherRole(UserManager).AuthorizedRolesToCreate(),
+                    UserRepository.GetAuthorizedRolesToCreate(CurrentUser),
                     nameof(ErpRole.RoleName), nameof(ErpRole.FormmatedName), model.UserRoles);
 
                 return View(model);
@@ -109,49 +102,47 @@ namespace WebERP.Controllers
                     Sobrenome = model.Sobrenome
                 };
 
-                var result = await UserManager.CreateAsync(user, model.Password);
-                await UserManager.AddClaimsAsync(user, model.UserRoles.Select(e => new Claim(ClaimTypes.Role, e)));
+                UserRepository.Create(user, model.Password);
+                UserRepository.AddClaims(user, model.UserRoles.Select(e => new Claim(ClaimTypes.Role, e)));
 
-                SweetAlertBuilder alert = new SweetAlertBuilder(
-                    "Usuário criado",
+                RegisterSweetAlertMessage("Usuário criado",
                     $"O usuário {user.UserName} foi criado com sucesso",
                     MessageType.Success);
-                ScriptManager.SetStartupScript(TempData, alert.BuildScript());
 
                 return RedirectToAction(actionName: nameof(Index));
             }
             else
             {
-                var user = UserManager.Users.FirstOrDefault(e => e.Id == model.Id);
+                var user = UserRepository.FindById(model.Id);
                 user.Nome = model.Nome;
                 user.Sobrenome = model.Sobrenome;
                 user.UserName = model.UserName;
                 user.Email = model.Email;
 
-                var currentClaims = await UserManager.GetClaimsAsync(user);
-                var currentRoles = currentClaims.Roles();
+                var currentRoles = UserRepository.GetUserRoles(user).ToList();
 
                 if (currentRoles.Count > model.UserRoles.Count)
                 {
                     currentRoles.RemoveAll(e => model.UserRoles.Contains(e));
-                    await UserManager.RemoveClaimsAsync(user,
+                    UserRepository.RemoveClaims(user,
                         currentRoles.Select(e => new Claim(ClaimTypes.Role, e)));
                 }
                 else
                 {
                     model.UserRoles.RemoveAll(e => currentRoles.Contains(e));
-                    await UserManager.AddClaimsAsync(user, 
+                    UserRepository.AddClaims(user,
                         model.UserRoles.Select(e => new Claim(ClaimTypes.Role, e)));
                 }
 
-                SweetAlertBuilder alert = new SweetAlertBuilder(
-                    "Usuário atualizado.",
-                    $"O usuário {user.UserName} foi alterado com sucesso",
-                    MessageType.Success);
-                ScriptManager.SetStartupScript(TempData, alert.BuildScript());
+                RegisterSweetAlertMessage("Usuário atualizado.", $"O usuário {user.UserName} foi alterado com sucesso", MessageType.Success);
 
                 return RedirectToAction(actionName: nameof(Index));
             }
+        }
+
+        private void RegisterActivePage()
+        {
+            ViewData["GerenciamentoDeUsuarios"] = "active";
         }
     }
 }

@@ -25,19 +25,16 @@ namespace WebERP.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
-        private readonly ILogger _logger;
         
 
         public ManageController(
           UserManager<ApplicationUser> userManager,
           SignInManager<ApplicationUser> signInManager,
-          IEmailSender emailSender,
-          ILogger<ManageController> logger)
+          IEmailSender emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
-            _logger = logger;
         }
 
         [TempData]
@@ -130,12 +127,11 @@ namespace WebERP.Controllers
             }
 
             await _signInManager.SignInAsync(user, isPersistent: false);
-            _logger.LogInformation("O usuário trocou de senha com sucesso.");
             StatusMessage = "Sua senha foi trocada com sucesso.";
 
             SweetAlertBuilder alert = new SweetAlertBuilder("Senha alterada!", StatusMessage, MessageType.Success);
             ScriptManager.SetStartupScript(TempData, alert.BuildScript());
-
+            
             return RedirectToAction(nameof(Index));
         }
 

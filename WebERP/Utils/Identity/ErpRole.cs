@@ -20,11 +20,4 @@ namespace WebERP.Utils.Identity
         public Departamento? Departamento { get; set; }
         public int Nivel { get; set; }
     }
-
-    public enum Departamento
-    {
-        Administracao,
-        Compras,
-        Estoque
-    }
 }
