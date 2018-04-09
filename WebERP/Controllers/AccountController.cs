@@ -26,18 +26,14 @@ namespace WebERP.Controllers
     [Route("[controller]/[action]")]
     public class AccountController : BaseController
     {
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
 
         public AccountController(
-            UserManager<ApplicationUser> userManager,
-            UserRepository repository,
             SignInManager<ApplicationUser> signInManager,
-            IHttpContextAccessor accessor,
-            IEmailSender emailSender) : base(userManager, repository, accessor)
+            CurrentUtils current,
+            IEmailSender emailSender) : base(current)
         {
-            _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
         }
@@ -110,7 +106,7 @@ namespace WebERP.Controllers
                     user.Sobrenome = "1";
                 }
 
-                var result = await _userManager.CreateAsync(user, model.Password);
+                var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
                     if (user.UserName == "admin")
@@ -145,14 +141,14 @@ namespace WebERP.Controllers
                     "Um e-mail de reset de senha foi enviado para você no e-mail informado.",
                     MessageType.Info);
 
-                var user = await _userManager.FindByEmailAsync(model.Email);
+                var user = await UserManager.FindByEmailAsync(model.Email);
                 if (user == null)
                 {
                     // Don't reveal that the user does not exist or is not confirmed
                     return RedirectToAction(nameof(Login));
                 }
                 
-                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var code = await UserManager.GeneratePasswordResetTokenAsync(user);
                 var callbackUrl = Url.ResetPasswordCallbackLink(user.Id, code, Request.Scheme);
                 await _emailSender.SendEmailAsync(model.Email, "Reset Password",
                     $"Please reset your password by clicking here: {callbackUrl}");
@@ -192,13 +188,13 @@ namespace WebERP.Controllers
             {
                 return View(model);
             }
-            var user = await _userManager.FindByEmailAsync(model.Email);
+            var user = await UserManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
                 // Don't reveal that the user does not exist
                 return RedirectToAction(nameof(ResetPasswordConfirmation));
             }
-            var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
+            var result = await UserManager.ResetPasswordAsync(user, model.Code, model.Password);
             if (result.Succeeded)
             {
                 return RedirectToAction(nameof(ResetPasswordConfirmation));

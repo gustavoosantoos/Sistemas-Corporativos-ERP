@@ -16,8 +16,7 @@ namespace WebERP.Controllers
     [Authorize]
     public class HomeController : BaseController
     {
-        public HomeController(UserManager<ApplicationUser> userManager, UserRepository repository, IHttpContextAccessor accessor) 
-            : base(userManager, repository, accessor)
+        public HomeController(CurrentUtils current) : base(current)
         {
 
         }

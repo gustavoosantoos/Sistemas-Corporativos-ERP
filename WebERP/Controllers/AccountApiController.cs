@@ -20,11 +20,7 @@ namespace WebERP.Controllers
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public AccountApiController (SignInManager<ApplicationUser> signInManager,
-                                     UserManager<ApplicationUser> userManager, 
-                                     UserRepository repository,
-                                     IHttpContextAccessor accessor)
-            : base(userManager, repository, accessor)
+        public AccountApiController (SignInManager<ApplicationUser> signInManager, CurrentUtils current) : base(current)
         {
             _signInManager = signInManager;
         }

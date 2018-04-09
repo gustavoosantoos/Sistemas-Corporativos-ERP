@@ -23,8 +23,7 @@ namespace WebERP.Controllers
     [Authorize]
     public class UsersController : BaseController
     {
-        public UsersController(UserManager<ApplicationUser> userManager, UserRepository repository, IHttpContextAccessor accessor) 
-            : base(userManager, repository, accessor)
+        public UsersController(CurrentUtils current) : base(current)
         {
         }
 

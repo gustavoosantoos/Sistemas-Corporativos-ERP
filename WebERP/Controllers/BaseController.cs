@@ -15,22 +15,22 @@ namespace WebERP.Controllers
 {
     public class BaseController : Controller
     {
-        protected readonly UserManager<ApplicationUser> UserManager;
-        protected readonly UserRepository UserRepository;
+        protected readonly CurrentUtils Current;
 
-        protected readonly IHttpContextAccessor Accessor;
+        protected UserManager<ApplicationUser> UserManager => Current.UserManager;
+        protected UserRepository UserRepository => Current.UserRepository;
+        protected IHttpContextAccessor Acessor => Current.Accessor;
+
         protected readonly string UserId;
         protected ApplicationUser CurrentUser;
         protected IEnumerable<string> UserRoles;
 
-        public BaseController(UserManager<ApplicationUser> userManager, UserRepository repository, IHttpContextAccessor accessor)
+        public BaseController(CurrentUtils current)
         {
-            UserManager = userManager;
-            Accessor = accessor;
-            UserId = userManager.GetUserId(Accessor.HttpContext.User);
-            UserRoles = Accessor.HttpContext.User.Roles();
-            UserRepository = repository;
-            CurrentUser = repository.GetUser(Accessor.HttpContext.User);
+            Current = current;
+            UserId = Current.UserManager.GetUserId(Current.Accessor.HttpContext.User);
+            UserRoles = Current.Accessor.HttpContext.User.Roles();
+            CurrentUser = Current.UserRepository.GetUser(Current.Accessor.HttpContext.User);
         }
 
         protected void RegisterSweetAlertMessage(string messageTitle, string message, MessageType type)
