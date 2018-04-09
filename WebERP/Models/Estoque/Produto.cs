@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace WebERP.Models.Estoque
 {
-    public class Produto
+    public class Produto : IEntity
     {
-        public int ProdutoId { get; set; }
+        public int Id { get; set; }
 
         [Required, StringLength(255)]
         public string Nome { get; set; }

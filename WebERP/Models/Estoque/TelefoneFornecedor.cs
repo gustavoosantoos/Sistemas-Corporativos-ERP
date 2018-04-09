@@ -1,6 +1,6 @@
 ﻿namespace WebERP.Models.Estoque
 {
-    public class TelefoneFornecedor
+    public class TelefoneFornecedor : IEntity
     {
         public int Id { get; set; }
         public byte Ddd { get; set; }

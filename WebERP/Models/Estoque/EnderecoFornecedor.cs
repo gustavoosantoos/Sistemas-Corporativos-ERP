@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WebERP.Models.Estoque
 {
-    public class EnderecoFornecedor
+    public class EnderecoFornecedor : IEntity
     {
         public int Id { get; set; }
 

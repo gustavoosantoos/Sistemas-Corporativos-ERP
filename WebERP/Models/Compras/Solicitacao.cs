@@ -7,7 +7,7 @@ using WebERP.Models.Estoque;
 
 namespace WebERP.Models.Compras
 {
-    public class Solicitacao
+    public class Solicitacao : IEntity
     {
         public int Id { get; set; }
 

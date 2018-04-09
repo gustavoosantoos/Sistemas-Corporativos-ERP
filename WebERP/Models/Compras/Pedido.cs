@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WebERP.Models.Compras
 {
-    public class Pedido
+    public class Pedido : IEntity
     {
         public int Id { get; set; }
 
