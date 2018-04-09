@@ -1,0 +1,78 @@
+﻿@model IEnumerable<WebERP.Models.Estoque.Produto>
+@{
+    ViewData["Title"] = "Produtos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="app-title">
+    <div>
+        <h1><i class="fa fa-cube"></i> Gerenciamento de Produtos</h1>
+        <p>Listagem, adição e gerenciamento de produtos.</p>
+    </div>
+    <ul class="app-breadcrumb breadcrumb">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item"><a href="#">Produtos</a></li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="tile">
+            <div class="tile-title-w-btn">
+                <h3 class="title">Produtos</h3>
+                <p><a class="btn btn-success icon-btn" asp-controller="Products" asp-action="Form"><i class="fa fa-plus"></i>Adicionar Produto</a></p>
+            </div>
+            <div class="tile-body">
+                <table class="table table-hover table-bordered table-responsive-lg" id="product-table">
+                    <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Unidade de Medida</th>
+                        <th>Mínimo no estoque</th>
+                        <th>Quantidade</th>
+                        <th>Ações</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var produto in Model)
+                    {
+                        <tr>
+                            <td>
+                                <span data-toggle="tooltip" data-placement="top" title="@produto.Descricao">
+                                    @produto.Nome
+                                </span>
+                            </td>
+                            <td>@produto.UnidadeDeMedida</td>
+                            <td>@produto.Minimo</td>
+                            <td>
+                                @produto.Quantidade &nbsp;
+                                @if (produto.IsCandidatoAPedidos())
+                                {
+                                    <i class="fa fa-exclamation-triangle text-danger" aria-hidden="true" 
+                                       data-toggle="tooltip" data-placement="top" title="Produto com estoque abaixo do mínimo">
+                                    </i>
+                                }
+                            </td>
+                            <td class="text-right">
+                                <a class="btn btn-primary btn-sm" asp-action="Form" asp-route-id="@produto.Id">
+                                    <i class="fa fa-pencil"></i>Editar
+                                </a>
+                                <button class="btn btn-danger btn-sm js-delete-product" data-user-id="@produto.Id">
+                                    <i class="fa fa-trash"></i>Apagar
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+ 
+@section Scripts
+{
+    <script>
+        $('#product-table').DataTable();
+    </script>
+}

@@ -7,13 +7,13 @@ using WebERP.Models;
 
 namespace WebERP.Data.Repositories
 {
-    public class GenericRepository<T> where T : class, IEntity  
+    public abstract class BaseRepository<T> where T : class, IEntity  
     {
         private readonly ApplicationDbContext _context;
         private readonly DbSet<T> _dbSet;
         private readonly IQueryable<T> _setNotTrackable;
 
-        public GenericRepository(ApplicationDbContext context)
+        protected BaseRepository(ApplicationDbContext context)
         {
             _context = context;
             _dbSet = context.Set<T>();
@@ -41,6 +41,6 @@ namespace WebERP.Data.Repositories
         }
         public T FindById(int id) => _setNotTrackable.FirstOrDefault(e => e.Id == id);
 
-        public IEnumerable<T> List() => _setNotTrackable.ToList();
+        protected IQueryable<T> All() => _setNotTrackable;
     }
 }

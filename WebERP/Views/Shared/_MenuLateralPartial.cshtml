@@ -34,7 +34,7 @@
         @if (User.IsInAnyRole(ErpRoleNames.SuperAdmin, ErpRoleNames.SupervisorDeEstoque, ErpRoleNames.Estoquista))
         {
             <li>
-                <a class="app-menu__item " asp-controller="Home" asp-action="Index">
+                <a class="app-menu__item @ViewBag.ProductActive" asp-controller="Products" asp-action="Index">
                     <i class="app-menu__icon fa fa-cube"></i>
                     <span class="app-menu__label">Produtos</span>
                 </a>

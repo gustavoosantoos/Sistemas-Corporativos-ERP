@@ -1,0 +1,76 @@
+﻿@model WebERP.Models.Estoque.Produto
+@{
+    ViewData["Title"] = "Produto";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="app-title">
+    <div>
+        <h1><i class="fa fa-cube"></i> Adição de Produtos</h1>
+        <p>É nessa area que você adiciona/edita produtos.</p>
+    </div>
+    <ul class="app-breadcrumb breadcrumb">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item"><a asp-action="Index">Produtos</a></li>
+        <li class="breadcrumb-item">Adicionar</li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="tile">
+            <form asp-action="Form" method="post">
+                <h3 class="tile-title">Dados do produto</h3>
+                <div class="tile-body">
+                    <input asp-for="Id" type="hidden" value="@(Model?.Id ?? 0)"/>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label" asp-for="Nome"></label>
+                                <input class="form-control" type="text" asp-for="Nome">
+                                <span asp-validation-for="Nome" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label" asp-for="Descricao"></label>
+                                <input class="form-control" type="text" asp-for="Descricao">
+                                <span asp-validation-for="Descricao" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label" asp-for="UnidadeDeMedida"></label>
+                                <input class="form-control" asp-for="UnidadeDeMedida">
+                                <span asp-validation-for="UnidadeDeMedida" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label" asp-for="Minimo"></label>
+                                <input class="form-control" asp-for="Minimo">
+                                <span asp-validation-for="Minimo" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label" asp-for="Quantidade"></label>
+                                <input class="form-control" asp-for="Quantidade">
+                                <span asp-validation-for="Quantidade" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tile-footer">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fa fa-fw fa-lg fa-check-circle"></i>Salvar
+                    </button>&nbsp;&nbsp;&nbsp;
+                    <a class="btn btn-secondary" asp-action="Index"><i class="fa fa-fw fa-lg fa-times-circle"></i>Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

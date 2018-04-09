@@ -41,6 +41,7 @@ namespace WebERP
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();      
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<UserRepository>();
+            services.AddTransient<ProductRepository>();
             services.AddTransient<CurrentUtils>();
 
             services.AddAutoMapper();

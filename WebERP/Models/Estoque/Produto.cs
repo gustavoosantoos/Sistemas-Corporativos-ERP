@@ -17,13 +17,16 @@ namespace WebERP.Models.Estoque
         public string Descricao { get; set; }
 
         [Required]
+        [Display(Name = "Unidade de Medida")]
         public string UnidadeDeMedida { get; set; }
 
         [Required]
-        public int Quantidade { get; set; }
+        [Range(0, double.MaxValue)]
+        public double Quantidade { get; set; }
 
         [Required]
-        public int Minimo { get; set; }
+        [Range(0, double.MaxValue)]
+        public double Minimo { get; set; }
 
         public bool IsCandidatoAPedidos()
         {
