@@ -39,6 +39,7 @@ namespace WebERP.Data.Repositories
             _context.Entry(entityToRemove).State = EntityState.Deleted;
             _context.SaveChanges();
         }
+
         public T FindById(int id) => _setNotTrackable.FirstOrDefault(e => e.Id == id);
 
         protected IQueryable<T> All() => _setNotTrackable;

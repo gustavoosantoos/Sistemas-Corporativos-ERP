@@ -25,54 +25,108 @@
             <div class="tile-body">
                 <table class="table table-hover table-bordered table-responsive-lg" id="product-table">
                     <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>Unidade de Medida</th>
-                        <th>Mínimo no estoque</th>
-                        <th>Quantidade</th>
-                        <th>Ações</th>
-                    </tr>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Unidade de Medida</th>
+                            <th>Mínimo no estoque</th>
+                            <th>Quantidade</th>
+                            <th>Ações</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    @foreach (var produto in Model)
-                    {
-                        <tr>
-                            <td>
-                                <span data-toggle="tooltip" data-placement="top" title="@produto.Descricao">
-                                    @produto.Nome
-                                </span>
-                            </td>
-                            <td>@produto.UnidadeDeMedida</td>
-                            <td>@produto.Minimo</td>
-                            <td>
-                                @produto.Quantidade &nbsp;
-                                @if (produto.IsCandidatoAPedidos())
-                                {
-                                    <i class="fa fa-exclamation-triangle text-danger" aria-hidden="true" 
-                                       data-toggle="tooltip" data-placement="top" title="Produto com estoque abaixo do mínimo">
-                                    </i>
-                                }
-                            </td>
-                            <td class="text-right">
-                                <a class="btn btn-primary btn-sm" asp-action="Form" asp-route-id="@produto.Id">
-                                    <i class="fa fa-pencil"></i>Editar
-                                </a>
-                                <button class="btn btn-danger btn-sm js-delete-product" data-user-id="@produto.Id">
-                                    <i class="fa fa-trash"></i>Apagar
-                                </button>
-                            </td>
-                        </tr>
-                    }
+                        @foreach (var produto in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <span data-toggle="tooltip" data-placement="top" title="@produto.Descricao">
+                                        @produto.Nome
+                                    </span>
+                                </td>
+                                <td>@produto.UnidadeDeMedida</td>
+                                <td>@produto.Minimo</td>
+                                <td>
+                                    @produto.Quantidade &nbsp;
+                                    @if (produto.IsCandidatoAPedidos())
+                                    {
+                                        <i class="fa fa-exclamation-triangle text-danger" aria-hidden="true"
+                                           data-toggle="tooltip" data-placement="top" title="Produto com estoque abaixo do mínimo">
+                                        </i>
+                                    }
+                                </td>
+                                <td class="text-right">
+                                    @if (produto.IsCandidatoAPedidos())
+                                    {
+
+                                        <input type="number" class="form-control js-product-@produto.Id" placeholder="Qtde." style="max-width: 100px; display: inline-block">
+                                        <a class="btn btn-default btn-sm js-gerar-pedido" data-produto-id="@produto.Id">
+                                            <i class="fa fa-file-text-o"></i>Gerar Pedido
+                                        </a>
+                                    }
+                                    <a class="btn btn-primary btn-sm" asp-action="Form" asp-route-id="@produto.Id">
+                                        <i class="fa fa-pencil"></i>Editar
+                                    </a>
+                                    <button class="btn btn-danger btn-sm js-delete-product" data-user-id="@produto.Id">
+                                        <i class="fa fa-trash"></i>Apagar
+                                    </button>
+                                </td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 </div>
- 
+
 @section Scripts
-{
+    {
     <script>
         $('#product-table').DataTable();
+
+        $(".js-gerar-pedido").click(function (e) {
+            var productId = $(e.target).attr("data-produto-id");
+            var quantidade = $($(".js-product-" + productId)[0]).val();
+            var dto = {
+                "ProductId": productId,
+                "Quantidade": quantidade
+            };
+
+            swal({
+                title: "Registar pedido?",
+                text: "Confirme o registro de pedido.",
+                type: "info",
+                showCancelButton: true,
+                confirmButtonText: "Sim, registre o pedido!",
+                cancelButtonText: "Não, cancele por favor!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            }, function (isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                        url: '/api/Solicitacao/AdicionarSolicitacao',
+                        type: 'POST',
+                        data: dto,
+                        success: function () {
+                            swal({
+                                title: "Registrado!",
+                                text: "A solicitação foi registrada com sucesso.",
+                                type: "success"
+                            }, function (isConfirm) {
+                                location.reload();
+                            });
+                        },
+                        error: function () {
+                            swal({
+                                title: "Algo deu errado. :(",
+                                text: "Algo aconteceu enquanto a operação era executada.",
+                                type: "error"
+                            });
+                        }
+                    });
+                } else {
+                    swal("Cancelado", "A solicitação não foi registrada, não se preocupe. :)", "error");
+                }
+            });
+        });
     </script>
 }

@@ -9,6 +9,7 @@ namespace WebERP.Models.Compras
 {
     public class Orcamento : IEntity
     {
+        [Key]
         public int Id { get; set; }
 
         [Required]

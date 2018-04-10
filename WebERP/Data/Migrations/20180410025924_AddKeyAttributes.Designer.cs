@@ -12,9 +12,10 @@ using WebERP.Models.Compras;
 namespace WebERP.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180410025924_AddKeyAttributes")]
+    partial class AddKeyAttributes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -237,8 +238,9 @@ namespace WebERP.Data.Migrations
 
                     b.Property<float>("QuantidadeSolicitada");
 
-                    b.Property<string>("SolicitanteId")
-                        .IsRequired();
+                    b.Property<int>("SolicitanteId");
+
+                    b.Property<string>("SolicitanteId1");
 
                     b.Property<int>("Status");
 
@@ -246,7 +248,7 @@ namespace WebERP.Data.Migrations
 
                     b.HasIndex("ProdutoId");
 
-                    b.HasIndex("SolicitanteId");
+                    b.HasIndex("SolicitanteId1");
 
                     b.ToTable("Solicitacoes");
                 });
@@ -435,8 +437,7 @@ namespace WebERP.Data.Migrations
 
                     b.HasOne("WebERP.Models.ApplicationUser", "Solicitante")
                         .WithMany()
-                        .HasForeignKey("SolicitanteId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("SolicitanteId1");
                 });
 
             modelBuilder.Entity("WebERP.Models.Estoque.Fornecedor", b =>

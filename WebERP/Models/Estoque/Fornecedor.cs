@@ -8,6 +8,7 @@ namespace WebERP.Models.Estoque
 {
     public class Fornecedor : IEntity
     {
+        [Key]
         public int Id { get; set; }
 
         [Required, StringLength(255)]

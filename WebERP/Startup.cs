@@ -42,6 +42,7 @@ namespace WebERP
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<UserRepository>();
             services.AddTransient<ProductRepository>();
+            services.AddTransient<SolicitacaoRepository>();
             services.AddTransient<CurrentUtils>();
 
             services.AddAutoMapper();

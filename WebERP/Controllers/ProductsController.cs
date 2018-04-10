@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using WebERP.Data.Repositories;
 using WebERP.Models;
 using WebERP.Models.Estoque;
+using WebERP.Utils;
 using WebERP.Utils.Identity;
 
 namespace WebERP.Controllers
@@ -51,6 +52,8 @@ namespace WebERP.Controllers
                 return View();
 
             _repository.Save(produto);
+
+            RegisterSweetAlertMessage("Produto salvo!", "O produto foi salvo com sucesso!", MessageType.Success);
             return RedirectToAction(actionName: nameof(Index));
         }
 

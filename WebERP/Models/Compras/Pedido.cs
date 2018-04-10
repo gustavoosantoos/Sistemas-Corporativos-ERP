@@ -8,6 +8,7 @@ namespace WebERP.Models.Compras
 {
     public class Pedido : IEntity
     {
+        [Key]
         public int Id { get; set; }
 
         [Required]
