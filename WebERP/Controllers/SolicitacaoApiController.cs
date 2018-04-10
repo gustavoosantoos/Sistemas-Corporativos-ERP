@@ -37,7 +37,7 @@ namespace WebERP.Controllers
 
             Produto produto = _productRepository.FindById(dto.ProductId);
 
-            if (produto == null || !produto.IsCandidatoAPedidos())
+            if (produto == null || !produto.PossuiEstoqueBaixoDoMinimo())
                 return BadRequest("O produto informado não foi encontrado ou não se encaixa nos requisitos para solicitações.");
 
             if (_solicitacaoRepository.ProdutoPossuiSolicitacaoAberta(produto.Id))

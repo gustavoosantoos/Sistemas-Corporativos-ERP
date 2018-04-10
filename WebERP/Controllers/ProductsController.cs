@@ -9,6 +9,7 @@ using WebERP.Models;
 using WebERP.Models.Estoque;
 using WebERP.Utils;
 using WebERP.Utils.Identity;
+using WebERP.ViewModels.EstoqueViewModels;
 
 namespace WebERP.Controllers
 {
@@ -16,10 +17,12 @@ namespace WebERP.Controllers
     public class ProductsController : BaseController
     {
         private readonly ProductRepository _repository;
+        private readonly SolicitacaoRepository _solicitacaoRepository;
 
-        public ProductsController(CurrentUtils current, ProductRepository repository) : base(current)
+        public ProductsController(CurrentUtils current, ProductRepository repository, SolicitacaoRepository solicitacaoRepository) : base(current)
         {
             _repository = repository;
+            _solicitacaoRepository = solicitacaoRepository;
         }
 
         [HttpGet]
@@ -27,7 +30,13 @@ namespace WebERP.Controllers
         {
             RegisterActivePage();
 
-            List<Produto> produtos = _repository.ListAll();
+            List<ProdutoViewModel> produtos = _repository
+                .ListAll().Select(e => new ProdutoViewModel()
+                {
+                    Produto = e,
+                    Solicitacao = _solicitacaoRepository.PegaSolicitacaoEmAbertoDoProduto(e.Id)
+                }).ToList();
+            
             return View(produtos);
         }
 

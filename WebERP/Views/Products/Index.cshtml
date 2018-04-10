@@ -1,4 +1,4 @@
-﻿@model IEnumerable<WebERP.Models.Estoque.Produto>
+﻿@model IEnumerable<WebERP.ViewModels.EstoqueViewModels.ProdutoViewModel>
 @{
     ViewData["Title"] = "Produtos";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -34,19 +34,19 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var produto in Model)
+                        @foreach (var vm in Model)
                         {
                             <tr>
                                 <td>
-                                    <span data-toggle="tooltip" data-placement="top" title="@produto.Descricao">
-                                        @produto.Nome
+                                    <span data-toggle="tooltip" data-placement="top" title="@vm.Produto.Descricao">
+                                        @vm.Produto.Nome
                                     </span>
                                 </td>
-                                <td>@produto.UnidadeDeMedida</td>
-                                <td>@produto.Minimo</td>
+                                <td>@vm.Produto.UnidadeDeMedida</td>
+                                <td>@vm.Produto.Minimo</td>
                                 <td>
-                                    @produto.Quantidade &nbsp;
-                                    @if (produto.IsCandidatoAPedidos())
+                                    @vm.Produto.Quantidade &nbsp;
+                                    @if (vm.Produto.PossuiEstoqueBaixoDoMinimo())
                                     {
                                         <i class="fa fa-exclamation-triangle text-danger" aria-hidden="true"
                                            data-toggle="tooltip" data-placement="top" title="Produto com estoque abaixo do mínimo">
@@ -54,18 +54,27 @@
                                     }
                                 </td>
                                 <td class="text-right">
-                                    @if (produto.IsCandidatoAPedidos())
+                                    @if (vm.Produto.PossuiEstoqueBaixoDoMinimo() && !vm.PossuiSolicitacaoAtiva())
                                     {
 
-                                        <input type="number" class="form-control js-product-@produto.Id" placeholder="Qtde." style="max-width: 100px; display: inline-block">
-                                        <a class="btn btn-default btn-sm js-gerar-pedido" data-produto-id="@produto.Id">
-                                            <i class="fa fa-file-text-o"></i>Gerar Pedido
+                                        <input type="number" class="form-control js-product-@vm.Produto.Id" placeholder="Qtde." style="max-width: 100px; display: inline-block">
+                                        <a class="btn btn-default btn-sm js-gerar-pedido" data-produto-id="@vm.Produto.Id">
+                                            <i class="fa fa-file-text-o"></i>Solicitar
                                         </a>
                                     }
-                                    <a class="btn btn-primary btn-sm" asp-action="Form" asp-route-id="@produto.Id">
+                                    @if (vm.PossuiSolicitacaoAtiva())
+                                    {
+                                        <span class="tipped-tooltip" style="margin-right: 20px; " 
+                                           data-solicitante="@vm.Solicitacao.Solicitante.Nome"
+                                           data-quantidade="@vm.Solicitacao.QuantidadeSolicitada"
+                                           data-status="@vm.Solicitacao.Status">
+                                            <i class="fa fa-file-text-o"></i>
+                                        </span>
+                                    }
+                                    <a class="btn btn-primary btn-sm" asp-action="Form" asp-route-id="@vm.Produto.Id">
                                         <i class="fa fa-pencil"></i>Editar
                                     </a>
-                                    <button class="btn btn-danger btn-sm js-delete-product" data-user-id="@produto.Id">
+                                    <button class="btn btn-danger btn-sm js-delete-product" data-user-id="@vm.Produto.Id">
                                         <i class="fa fa-trash"></i>Apagar
                                     </button>
                                 </td>
@@ -127,6 +136,22 @@
                     swal("Cancelado", "A solicitação não foi registrada, não se preocupe. :)", "error");
                 }
             });
+        });
+
+        //Utilizando tooltip para mostrar os dados da última solicitação para determinado produto
+        $(document).ready(function () {
+            Tipped.create('.tipped-tooltip', function (element) {
+                var content = "Solicitante: " + $(element).data('solicitante') + "</br>";
+                content += "Quantidade: " + $(element).data('quantidade') + "</br>";
+                content += "Status: " + $(element).data('status');
+
+                return {
+                    title: "Solicitação",
+                    content: content
+                };
+            }, {
+                    skin: 'light'
+                });
         });
     </script>
 }

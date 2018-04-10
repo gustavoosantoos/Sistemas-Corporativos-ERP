@@ -29,7 +29,7 @@ namespace WebERP.Models.Estoque
         [Range(0, double.MaxValue)]
         public double Minimo { get; set; }
 
-        public bool IsCandidatoAPedidos()
+        public bool PossuiEstoqueBaixoDoMinimo()
         {
             return Quantidade <= Minimo;
         }

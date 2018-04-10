@@ -20,7 +20,7 @@ using WebERP.ViewModels.ManageViewModels;
 
 namespace WebERP.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = ErpRoleNames.SuperAdmin)]
     public class UsersController : BaseController
     {
         public UsersController(CurrentUtils current) : base(current)

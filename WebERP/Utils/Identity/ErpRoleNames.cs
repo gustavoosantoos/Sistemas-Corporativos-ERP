@@ -13,7 +13,7 @@ namespace WebERP.Utils.Identity
         public const string SupervisorDeCompras = "SupervisorDeCompras";
         public const string Compras = "Compras";
 
-        public const string SupervisorDeEstoque = "SupervidorDeEstoque";
-        public const string Estoquista = "Estoquista";
+        public const string SupervisorDeEstoque = "SupervisorDeEstoque";
+        public const string Estoquista = "Estoque";
     }
 }

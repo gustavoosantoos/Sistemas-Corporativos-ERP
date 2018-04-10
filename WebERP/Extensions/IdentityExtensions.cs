@@ -64,7 +64,8 @@ namespace WebERP.Extensions
 
         public static bool IsInAnyRole(this ClaimsPrincipal claimsPrincipal, params string[] roles)
         {
-            return roles.Any(claimsPrincipal.IsInRole);
+            var userRoles = claimsPrincipal.Roles();
+            return userRoles.Any(roles.Contains);
         }
     }
 }
