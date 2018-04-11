@@ -1,4 +1,5 @@
-﻿@model IEnumerable<WebERP.ViewModels.EstoqueViewModels.ProdutoViewModel>
+﻿@using WebERP.Models.Compras
+@model IEnumerable<WebERP.ViewModels.EstoqueViewModels.ProdutoViewModel>
 @{
     ViewData["Title"] = "Produtos";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -6,7 +7,7 @@
 
 <div class="app-title">
     <div>
-        <h1><i class="fa fa-cube"></i> Gerenciamento de Produtos</h1>
+        <h1><i class="fa fa-cubes"></i> Gerenciamento de Produtos</h1>
         <p>Listagem, adição e gerenciamento de produtos.</p>
     </div>
     <ul class="app-breadcrumb breadcrumb">
@@ -28,8 +29,15 @@
                         <tr>
                             <th>Nome</th>
                             <th>Unidade de Medida</th>
-                            <th>Mínimo no estoque</th>
-                            <th>Quantidade</th>
+                            <th style="max-width: 70px">
+                                Mínimo no estoque
+                            </th>
+                            <th style="max-width: 70px">
+                                Quantidade
+                            </th>
+                            <th style="max-width: 70px">
+                                Última Solicitação
+                            </th>
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -53,23 +61,25 @@
                                         </i>
                                     }
                                 </td>
+                                <td class="text-center">
+                                    @if (vm.Solicitacao != null)
+                                    {
+                                        <span class="tipped-tooltip" style="@vm.CorParaStatus()" 
+                                              data-solicitante="@vm.Solicitacao.Solicitante.Nome"
+                                              data-quantidade="@vm.Solicitacao.QuantidadeSolicitada"
+                                              data-status="@vm.Solicitacao.Status">
+                                            <i class="fa fa-file-text-o"></i>
+                                        </span>
+                                    }
+                                </td>
                                 <td class="text-right">
                                     @if (vm.Produto.PossuiEstoqueBaixoDoMinimo() && !vm.PossuiSolicitacaoAtiva())
                                     {
 
-                                        <input type="number" class="form-control js-product-@vm.Produto.Id" placeholder="Qtde." style="max-width: 100px; display: inline-block">
+                                        <input type="number" class="form-control js-product-@vm.Produto.Id" placeholder="Qtde." style="max-width: 80px; display: inline-block">
                                         <a class="btn btn-default btn-sm js-gerar-pedido" data-produto-id="@vm.Produto.Id">
                                             <i class="fa fa-file-text-o"></i>Solicitar
                                         </a>
-                                    }
-                                    @if (vm.PossuiSolicitacaoAtiva())
-                                    {
-                                        <span class="tipped-tooltip" style="margin-right: 20px; " 
-                                           data-solicitante="@vm.Solicitacao.Solicitante.Nome"
-                                           data-quantidade="@vm.Solicitacao.QuantidadeSolicitada"
-                                           data-status="@vm.Solicitacao.Status">
-                                            <i class="fa fa-file-text-o"></i>
-                                        </span>
                                     }
                                     <a class="btn btn-primary btn-sm" asp-action="Form" asp-route-id="@vm.Produto.Id">
                                         <i class="fa fa-pencil"></i>Editar
@@ -146,7 +156,7 @@
                 content += "Status: " + $(element).data('status');
 
                 return {
-                    title: "Solicitação",
+                    title: "Última Solicitação",
                     content: content
                 };
             }, {

@@ -20,10 +20,11 @@ namespace WebERP.Data.Repositories
         /// </summary>
         /// <param name="productId"></param>
         /// <returns></returns>
-        public Solicitacao PegaSolicitacaoEmAbertoDoProduto(int productId)
+        public Solicitacao PegaUltimaSolicitacaoDoProduto(int productId)
         {
             var solicitacao = All().Include(e => e.Solicitante)
-                .SingleOrDefault(e => e.ProdutoId == productId && !e.IsSolicitacaoFinalizada());
+                .OrderByDescending(e => e.Data)
+                .FirstOrDefault(e => e.ProdutoId == productId);
             return solicitacao;
         }
 
@@ -31,6 +32,14 @@ namespace WebERP.Data.Repositories
         {
             var possuiSolicitacao = All().Any(e => e.ProdutoId == productId && !e.IsSolicitacaoFinalizada());
             return possuiSolicitacao;
+        }
+
+        public List<Solicitacao> ListAll()
+        {
+            return All()
+                .Include(e => e.Produto)
+                .Include(e => e.Solicitante)
+                .ToList();
         }
     }
 }

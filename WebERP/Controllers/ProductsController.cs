@@ -34,7 +34,7 @@ namespace WebERP.Controllers
                 .ListAll().Select(e => new ProdutoViewModel()
                 {
                     Produto = e,
-                    Solicitacao = _solicitacaoRepository.PegaSolicitacaoEmAbertoDoProduto(e.Id)
+                    Solicitacao = _solicitacaoRepository.PegaUltimaSolicitacaoDoProduto(e.Id)
                 }).ToList();
             
             return View(produtos);

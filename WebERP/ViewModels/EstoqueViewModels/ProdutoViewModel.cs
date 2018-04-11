@@ -14,7 +14,27 @@ namespace WebERP.ViewModels.EstoqueViewModels
 
         public bool PossuiSolicitacaoAtiva()
         {
-            return Solicitacao != null;
+            return Solicitacao != null && !Solicitacao.IsSolicitacaoFinalizada();
+        }
+
+        public string CorParaStatus()
+        {
+            if (Solicitacao == null)
+                return "";
+
+            StatusSolicitacao s = Solicitacao.Status;
+
+            switch (s)
+            {
+                case StatusSolicitacao.Aprovado:
+                    return "color: green;";
+                case StatusSolicitacao.Negado:
+                    return "color: red;";
+                case StatusSolicitacao.Orcamentacao:
+                    return "color: blue;";
+                default:
+                    return "";
+            }
         }
     }
 }

@@ -1,0 +1,125 @@
+﻿@using WebERP.Models.Compras
+@model IEnumerable<WebERP.Models.Compras.Solicitacao>
+@{
+    ViewData["Title"] = "Solicitações de compra";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="app-title">
+    <div>
+        <h1><i class="fa fa-file-text-o"></i> Gerenciamento de Solicitações</h1>
+        <p>Listagem e gerenciamento de solicitações de compra.</p>
+    </div>
+    <ul class="app-breadcrumb breadcrumb">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item"><a href="#"></a>Solicitações</li>
+    </ul>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="tile">
+            <div class="tile-title">
+                <h3 class="title">Solicitações</h3>
+            </div>
+            <div class="tile-body">
+                <table class="table table-hover table-bordered table-responsive-lg" id="product-table">
+                    <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Unidade de Medida</th>
+                        <th>Quantidade Solicitada</th>
+                        <th>Data de Solicitação</th>
+                        <th>Solicitante</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var m in Model)
+                    {
+                        <tr>
+                            <td>@m.Produto.Nome</td>
+                            <td>@m.Produto.UnidadeDeMedida</td>
+                            <td>@m.QuantidadeSolicitada</td>
+                            <td>@m.Data.ToString("d")</td>
+                            <td>@m.Solicitante.Nome</td>
+                            <td>@m.Status</td>
+                            <td class="text-right">
+                                @if (m.Status == StatusSolicitacao.Pendente)
+                                {
+                                    <button class="btn btn-danger btn-sm js-negar-solicitacao" data-solicitacao-id="@m.Id">
+                                        <i class="fa fa-times"></i>Negar
+                                    </button>
+                                    <a class="btn btn-success btn-sm js-aprovar-solicitacao" data-solicitacao-id="@m.Id">
+                                        <i class="fa fa-check"></i>Aprovar
+                                    </a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script>
+        
+        $(document).ready(function() {
+            $(".js-negar-solicitacao").click(function(e) {
+                var solicitacaoId = $(e.target).attr("data-solicitacao-id");
+                mudarStatusSolicitacao("Negar", solicitacaoId);
+            });
+
+            $(".js-aprovar-solicitacao").click(function(e) {
+                var solicitacaoId = $(e.target).attr("data-solicitacao-id");
+                mudarStatusSolicitacao("Aprovar", solicitacaoId);
+            });
+        });
+
+        function mudarStatusSolicitacao(status, id) {
+            var sendData = { "solicitacaoId": id };
+            var baseUrl = "/api/Solicitacao/" + status + "Solicitacao";
+
+            swal({
+                title: status +" solicitação?",
+                text: "Confirme a alteração na solicitação.",
+                type: "info",
+                showCancelButton: true,
+                confirmButtonText: "Sim, " + status.toLowerCase() + " a solicitação!",
+                cancelButtonText: "Não, cancele por favor!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            }, function (isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                        url: baseUrl,
+                        type: 'POST',
+                        data: sendData,
+                        success: function () {
+                            swal({
+                                title: "Alterado!",
+                                text: "A solicitação foi alterada com sucesso.",
+                                type: "success"
+                            }, function (isConfirm) {
+                                location.reload();
+                            });
+                        },
+                        error: function () {
+                            swal({
+                                title: "Algo deu errado. :(",
+                                text: "Algo aconteceu enquanto a operação era executada.",
+                                type: "error"
+                            });
+                        }
+                    });
+                } else {
+                    swal("Cancelado", "A solicitação não foi alterada, não se preocupe. :)", "error");
+                }
+            });
+        }
+    </script>
+}

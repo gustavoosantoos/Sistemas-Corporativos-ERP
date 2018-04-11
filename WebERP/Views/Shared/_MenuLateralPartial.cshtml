@@ -35,9 +35,25 @@
         {
             <li>
                 <a class="app-menu__item @ViewBag.ProductActive" asp-controller="Products" asp-action="Index">
-                    <i class="app-menu__icon fa fa-cube"></i>
+                    <i class="app-menu__icon fa fa-cubes"></i>
                     <span class="app-menu__label">Produtos</span>
                 </a>
+            </li>
+        }
+        @if (User.IsInAnyRole(ErpRoleNames.SuperAdmin, ErpRoleNames.SupervisorDeCompras, ErpRoleNames.Compras))
+        {
+            <li class="treeview">
+                <a class="app-menu__item @ViewBag.ComprasActive" href="#" data-toggle="treeview">
+                    <i class="app-menu__icon fa fa-usd"></i>
+                    <span class="app-menu__label">Compras</span><i class="treeview-indicator fa fa-angle-right"></i>
+                </a>
+                <ul class="treeview-menu">
+                    <li>
+                        <a class="treeview-item" asp-controller="Solicitacao" asp-action="Index">
+                            <i class="icon fa fa-circle-o"></i>&nbsp;Solicitações
+                        </a>
+                    </li>
+                </ul>
             </li>
         }
     </ul>

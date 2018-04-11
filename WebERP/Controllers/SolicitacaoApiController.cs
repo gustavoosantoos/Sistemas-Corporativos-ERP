@@ -10,6 +10,7 @@ using WebERP.Models;
 using WebERP.Models.Compras;
 using WebERP.Models.Dto;
 using WebERP.Models.Estoque;
+using WebERP.Utils.Identity;
 
 namespace WebERP.Controllers
 {
@@ -50,6 +51,42 @@ namespace WebERP.Controllers
             solicitacao.QuantidadeSolicitada = dto.Quantidade;
             solicitacao.Status = StatusSolicitacao.Pendente;
 
+            _solicitacaoRepository.Save(solicitacao);
+
+            return Ok();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "SuperAdmin, SupervisorDeCompras, Compras")]
+        [Route("AprovarSolicitacao")]
+        public IActionResult AprovarSolicitacao(int solicitacaoId)
+        {
+            Solicitacao solicitacao = _solicitacaoRepository.FindById(solicitacaoId);
+
+            if (solicitacao == null)
+                return NotFound("Solicitação não encontrada.");
+            if (solicitacao.Status != StatusSolicitacao.Pendente)
+                return BadRequest("O status da solicitação é invalido para a operação solicitada.");
+
+            solicitacao.Status = StatusSolicitacao.Orcamentacao;
+            _solicitacaoRepository.Save(solicitacao);
+
+            return Ok();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "SuperAdmin, SupervisorDeCompras, Compras")]
+        [Route("NegarSolicitacao")]
+        public IActionResult NegarSolicitacao(int solicitacaoId)
+        {
+            Solicitacao solicitacao = _solicitacaoRepository.FindById(solicitacaoId);
+
+            if (solicitacao == null)
+                return NotFound("Solicitação não encontrada.");
+            if (solicitacao.Status != StatusSolicitacao.Pendente)
+                return BadRequest("O status da solicitação é invalido para a operação solicitada.");
+
+            solicitacao.Status = StatusSolicitacao.Negado;
             _solicitacaoRepository.Save(solicitacao);
 
             return Ok();
