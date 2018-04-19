@@ -39,7 +39,7 @@ namespace WebERP.Controllers
             ScriptManager.SetStartupScript(TempData, alert.BuildScript());
         }
         
-        protected void RegisterBootstraAlertMessage(string title, string message, MessageType type)
+        protected void RegisterBootstrapAlertMessage(string title, string message, MessageType type)
         {
             BootstrapAlertBuilder alert = new BootstrapAlertBuilder(title, message, type);
             ScriptManager.SetStartupScript(TempData, alert.BuildScript());

@@ -1,28 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebERP.Data.Repositories;
 using WebERP.Models;
 using WebERP.Models.Compras;
 using WebERP.Models.Dto;
 using WebERP.Models.Estoque;
-using WebERP.Utils.Identity;
 
-namespace WebERP.Controllers
+namespace WebERP.Controllers.Api
 {
     [Authorize]
     [Produces("application/json")]
     [Route("api/Solicitacao")]
-    public class SolicitacaoApiController : BaseController
+    public class SolicitacaoController : BaseController
     {
         private readonly ProductRepository _productRepository;
         private readonly SolicitacaoRepository _solicitacaoRepository;
 
-        public SolicitacaoApiController(CurrentUtils current, ProductRepository productRepository, SolicitacaoRepository solicitacaoRepository) : base(current)
+        public SolicitacaoController(CurrentUtils current, ProductRepository productRepository, SolicitacaoRepository solicitacaoRepository) : base(current)
         {
             _productRepository = productRepository;
             _solicitacaoRepository = solicitacaoRepository;
@@ -49,8 +44,6 @@ namespace WebERP.Controllers
             solicitacao.ProdutoId = produto.Id;
             solicitacao.SolicitanteId = CurrentUser.Id;
             solicitacao.QuantidadeSolicitada = dto.Quantidade;
-            solicitacao.Status = StatusSolicitacao.Pendente;
-
             _solicitacaoRepository.Save(solicitacao);
 
             return Ok();
@@ -68,7 +61,7 @@ namespace WebERP.Controllers
             if (solicitacao.Status != StatusSolicitacao.Pendente)
                 return BadRequest("O status da solicitação é invalido para a operação solicitada.");
 
-            solicitacao.Status = StatusSolicitacao.Orcamentacao;
+            solicitacao.AprovarSolicitacaoParaOrcamentacao();
             _solicitacaoRepository.Save(solicitacao);
 
             return Ok();
@@ -86,7 +79,7 @@ namespace WebERP.Controllers
             if (solicitacao.Status != StatusSolicitacao.Pendente)
                 return BadRequest("O status da solicitação é invalido para a operação solicitada.");
 
-            solicitacao.Status = StatusSolicitacao.Negado;
+            solicitacao.NegarSolicitacao();
             _solicitacaoRepository.Save(solicitacao);
 
             return Ok();

@@ -1,26 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using WebERP.Data.Repositories;
-using WebERP.Extensions;
 using WebERP.Models;
 using WebERP.Utils.Identity;
 
-namespace WebERP.Controllers
+namespace WebERP.Controllers.Api
 {
     [Authorize(Roles = ErpRoleNames.SuperAdmin)]
     [Produces("application/json")]
     [Route("api/Account")]
-    public class AccountApiController : BaseController
+    public class AccountController : BaseController
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public AccountApiController (SignInManager<ApplicationUser> signInManager, CurrentUtils current) : base(current)
+        public AccountController (SignInManager<ApplicationUser> signInManager, CurrentUtils current) : base(current)
         {
             _signInManager = signInManager;
         }

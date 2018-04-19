@@ -68,7 +68,7 @@ namespace WebERP.Controllers
                 }
                 else
                 {
-                    RegisterBootstraAlertMessage(string.Empty, "Login e/ou senha inválido(s).", MessageType.Danger);
+                    RegisterBootstrapAlertMessage(string.Empty, "Login e/ou senha inválido(s).", MessageType.Danger);
                     return View(model);
                 }
             }
