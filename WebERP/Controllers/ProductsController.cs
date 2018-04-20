@@ -13,7 +13,7 @@ using WebERP.ViewModels.EstoqueViewModels;
 
 namespace WebERP.Controllers
 {
-    [Authorize(Roles = "SuperAdmin, SupervisorDeEstoque, Estoque")]
+    [Authorize(Roles = ErpRoleGroups.Estoque)]
     public class ProductsController : BaseController
     {
         private readonly ProductRepository _repository;

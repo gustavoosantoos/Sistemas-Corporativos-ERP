@@ -41,5 +41,14 @@ namespace WebERP.Data.Repositories
                 .Include(e => e.Solicitante)
                 .ToList();
         }
+
+        public List<Solicitacao> ListaSolicitacoesEmOrcamentacao()
+        {
+            return All()
+                .Include(e => e.Produto)
+                .Include(e => e.Solicitante)
+                .Where(e => e.Status == StatusSolicitacao.Orcamentacao)
+                .ToList();
+        }
     }
 }

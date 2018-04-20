@@ -16,4 +16,16 @@ namespace WebERP.Utils.Identity
         public const string SupervisorDeEstoque = "SupervisorDeEstoque";
         public const string Estoquista = "Estoque";
     }
+
+    public static class ErpRoleGroups
+    {
+        public const string Estoque 
+            = ErpRoleNames.SuperAdmin + "," + ErpRoleNames.SupervisorDeEstoque +"," + ErpRoleNames.Estoquista;
+
+        public const string Compras
+            = ErpRoleNames.SuperAdmin + "," + ErpRoleNames.SupervisorDeCompras + "," + ErpRoleNames.Compras;
+
+        public static readonly string Administrativo 
+            = ErpRoleNames.SuperAdmin + "," + ErpRoleNames.Administrativo;
+    }
 }
