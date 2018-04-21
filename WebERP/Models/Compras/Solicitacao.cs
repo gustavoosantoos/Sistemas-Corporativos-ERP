@@ -27,18 +27,17 @@ namespace WebERP.Models.Compras
         [Required]
         public float QuantidadeSolicitada { get; set; }
 
-        public List<Orcamento> Orcamentos { get; set; }
-        public Produto Produto { get; set; }
+        public virtual List<Orcamento> Orcamentos { get; set; } = new List<Orcamento>();
+        public virtual Produto Produto { get; set; }
         public StatusSolicitacao Status { get; private set; }
-        public ApplicationUser Solicitante { get; set; }
+        public virtual ApplicationUser Solicitante { get; set; }
 
         public void NegarSolicitacao()
         {
             ValidarMudancaDeStatus(StatusSolicitacao.Pendente);
             Status = StatusSolicitacao.Negado;
         }
-
-
+        
         public void AprovarSolicitacaoParaOrcamentacao()
         {
             ValidarMudancaDeStatus(StatusSolicitacao.Pendente);
@@ -53,6 +52,11 @@ namespace WebERP.Models.Compras
 
         public bool IsSolicitacaoFinalizada() =>
             Status == StatusSolicitacao.Aprovado || Status == StatusSolicitacao.Negado;
+
+        public bool IsDisponivelParaRealizarPedido()
+        {
+            return Status == StatusSolicitacao.Orcamentacao && Orcamentos.Count > 0;
+        }
 
 
         private void ValidarMudancaDeStatus(StatusSolicitacao statusToCheck)

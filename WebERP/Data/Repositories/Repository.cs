@@ -19,8 +19,8 @@ namespace WebERP.Data.Repositories
             _dbSet = context.Set<T>();
             _setNotTrackable = context.Set<T>().AsNoTracking();
         }
-        
-        public void Save(T entity)
+
+        public virtual void Save(T entity)
         {
             if (entity.Id == default(int))
                 _dbSet.Add(entity);
@@ -30,7 +30,7 @@ namespace WebERP.Data.Repositories
             _context.SaveChanges();
         }
         
-        public void Delete(int id)
+        public virtual void Delete(int id)
         {
             var entityToRemove = FindById(id);
             if (entityToRemove == null)
@@ -40,7 +40,7 @@ namespace WebERP.Data.Repositories
             _context.SaveChanges();
         }
 
-        public T FindById(int id) => _setNotTrackable.FirstOrDefault(e => e.Id == id);
+        public virtual T FindById(int id) => _setNotTrackable.FirstOrDefault(e => e.Id == id);
 
         protected IQueryable<T> All() => _setNotTrackable;
     }

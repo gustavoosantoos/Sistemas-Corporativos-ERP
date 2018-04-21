@@ -1,0 +1,44 @@
+﻿@model WebERP.ViewModels.ComprasViewModels.OrcamentoViewModel
+@{
+
+}
+
+<div class="modal-header">
+    <h5 class="modal-title" id="modal-title">Orçamentos do produto</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="card text-center">
+        <div class="card-header">
+            Dados do Produto
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Produto: @Model.Produto.Nome</h5>
+            <table class="table table-sm table-bordered">
+                <thead>
+                    <tr class="d-flex">
+                        <th class="col-4">Descrição</th>
+                        <th class="col-4">Unidade de medida</th>
+                        <th class="col-4">Quantidade solicitada</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="d-flex">
+                        <td class="col-4">@Model.Produto.Descricao</td>
+                        <td class="col-4">@Model.Produto.UnidadeDeMedida</td>
+                        <td class="col-4">@Model.Solicitacao.QuantidadeSolicitada</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer text-muted">
+            Solicitado em: @Model.Solicitacao.Data.ToString("d") por @Model.Solicitante
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+    <button type="button" class="btn btn-primary">Save changes</button>
+</div>

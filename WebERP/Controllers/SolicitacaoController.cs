@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebERP.Data.Repositories;
 using WebERP.Models;
+using WebERP.Models.Compras;
 using WebERP.Utils.Identity;
+using WebERP.ViewModels.ComprasViewModels;
 
 namespace WebERP.Controllers
 {
@@ -25,11 +27,21 @@ namespace WebERP.Controllers
             var solicitacoes = _repository.ListAll();
             return View(solicitacoes);
         }
-       
-        public IActionResult Orcamentacao()
+
+        public IActionResult Orcamentos(int? id)
         {
-            var solicitacoes = _repository.ListaSolicitacoesEmOrcamentacao();
-            return View(solicitacoes);
+            if (id.HasValue == false)
+                return BadRequest();
+
+            Solicitacao solicitacao = _repository.FindById(id.Value, includeProduto: true, includeSolicitante: true);
+
+            OrcamentoViewModel vm = new OrcamentoViewModel();
+            vm.Produto = solicitacao.Produto;
+            vm.Solicitacao = solicitacao;
+            vm.Solicitante = solicitacao.Solicitante.Nome;
+            vm.Orcamentos = solicitacao.Orcamentos.ToList();
+
+            return PartialView("_Orcamentos", vm);
         }
     }
 }

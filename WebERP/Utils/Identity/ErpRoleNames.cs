@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace WebERP.Utils.Identity
+﻿namespace WebERP.Utils.Identity
 {
     public static class ErpRoleNames
     {
@@ -14,18 +10,22 @@ namespace WebERP.Utils.Identity
         public const string Compras = "Compras";
 
         public const string SupervisorDeEstoque = "SupervisorDeEstoque";
-        public const string Estoquista = "Estoque";
+        public const string Estoque = "Estoque";
     }
 
     public static class ErpRoleGroups
     {
         public const string Estoque 
-            = ErpRoleNames.SuperAdmin + "," + ErpRoleNames.SupervisorDeEstoque +"," + ErpRoleNames.Estoquista;
+            = ErpRoleNames.SuperAdmin + "," + ErpRoleNames.SupervisorDeEstoque +"," + ErpRoleNames.Estoque;
 
         public const string Compras
             = ErpRoleNames.SuperAdmin + "," + ErpRoleNames.SupervisorDeCompras + "," + ErpRoleNames.Compras;
 
-        public static readonly string Administrativo 
+        public const string Administrativo 
             = ErpRoleNames.SuperAdmin + "," + ErpRoleNames.Administrativo;
+
+        public static string[] RolesEstoque => new[] { ErpRoleNames.SuperAdmin, ErpRoleNames.SupervisorDeEstoque, ErpRoleNames.Estoque};
+        public static string[] RolesCompras => new[] { ErpRoleNames.SuperAdmin, ErpRoleNames.SupervisorDeCompras, ErpRoleNames.Compras};
+        public static string[] RolesAdministrativas => new[] { ErpRoleNames.SuperAdmin, ErpRoleNames.Administrativo};
     }
 }

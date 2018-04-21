@@ -7,9 +7,9 @@
 
     <link rel="stylesheet" type="text/css" href="~/css/main.css">
     <link href="~/css/site.css" rel="stylesheet" />
-    <!-- Font-icon css-->
-    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="~/css/font-awesome.css" rel="stylesheet" />
     <link href="~/plugins/tipped/tipped.css" rel="stylesheet" />
+    <link href="~/plugins/smart-wizard/smart_wizard.css" rel="stylesheet" />
 </head>
 <body class="app sidebar-mini rtl">
     @await Html.PartialAsync("_MenuSuperiorPartial")
@@ -36,12 +36,15 @@
     <script src="~/js/plugins/select2.min.js"></script>
     <script src="~/plugins/tipped/tipped.js"></script>
 
-    <script src="~/js/sweetalert.min.js"></script>
     <link href="~/css/SweetAlertStyles.css" rel="stylesheet" />
+    <script src="~/js/sweetalert.min.js"></script>
     <script src="~/js/bootstrap-notify.min.js"></script>
+    <script src="~/plugins/smart-wizard/jquery.smartWizard.js"></script>
+
     <script>
         @Html.Raw(TempData["StartupScript"])
     </script>
+
     @RenderSection("Scripts", required: false)
 </body>
 </html>

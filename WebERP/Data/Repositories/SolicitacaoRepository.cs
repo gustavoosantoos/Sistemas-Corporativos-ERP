@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using WebERP.Models.Compras;
@@ -39,6 +40,7 @@ namespace WebERP.Data.Repositories
             return All()
                 .Include(e => e.Produto)
                 .Include(e => e.Solicitante)
+                .Include(e => e.Orcamentos)
                 .ToList();
         }
 
@@ -49,6 +51,20 @@ namespace WebERP.Data.Repositories
                 .Include(e => e.Solicitante)
                 .Where(e => e.Status == StatusSolicitacao.Orcamentacao)
                 .ToList();
+        }
+
+        public Solicitacao FindById(int id, bool includeProduto = false, bool includeSolicitante = false, bool includeOrcamentos = false)
+        {
+            var solicitacoes = All();
+
+            if (includeProduto)
+                solicitacoes = solicitacoes.Include(e => e.Produto);
+            if (includeSolicitante)
+                solicitacoes = solicitacoes.Include(e => e.Solicitante);
+            if (includeOrcamentos)
+                solicitacoes = solicitacoes.Include(e => e.Orcamentos);
+            
+            return solicitacoes.FirstOrDefault(e => e.Id == id);
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿@using WebERP.Models.Compras
+﻿@using WebERP.Extensions
+@using WebERP.Models.Compras
+@using WebERP.Utils.Identity
 @model IEnumerable<WebERP.Models.Compras.Solicitacao>
 @{
     ViewData["Title"] = "Solicitações de compra";
@@ -22,41 +24,55 @@
                 <h3 class="title">Solicitações</h3>
             </div>
             <div class="tile-body">
-                <table class="table table-hover table-bordered table-responsive-lg" id="product-table">
+                <table class="table table-hover table-bordered table-responsive-lg" id="solicitacoes-table">
                     <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>Unidade de Medida</th>
-                        <th>Quantidade Solicitada</th>
-                        <th>Data de Solicitação</th>
-                        <th>Solicitante</th>
-                        <th>Status</th>
-                        <th>Ações</th>
-                    </tr>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Unidade de Medida</th>
+                            <th>Quantidade Solicitada</th>
+                            <th>Data de Solicitação</th>
+                            <th>Solicitante</th>
+                            <th>Status</th>
+                            <th style="min-width: 150px">Ações</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    @foreach (var m in Model)
-                    {
-                        <tr>
-                            <td>@m.Produto.Nome</td>
-                            <td>@m.Produto.UnidadeDeMedida</td>
-                            <td>@m.QuantidadeSolicitada</td>
-                            <td>@m.Data.ToString("d")</td>
-                            <td>@m.Solicitante.Nome</td>
-                            <td>@m.Status</td>
-                            <td class="text-right">
-                                @if (m.Status == StatusSolicitacao.Pendente)
-                                {
-                                    <button class="btn btn-danger btn-sm js-negar-solicitacao" data-solicitacao-id="@m.Id">
-                                        <i class="fa fa-times"></i>Negar
-                                    </button>
-                                    <a class="btn btn-success btn-sm js-aprovar-solicitacao" data-solicitacao-id="@m.Id">
-                                        <i class="fa fa-check"></i>Aprovar
-                                    </a>
-                                }
-                            </td>
-                        </tr>
-                    }
+                        @foreach (var m in Model)
+                        {
+                            <tr>
+                                <td>@m.Produto.Nome</td>
+                                <td>@m.Produto.UnidadeDeMedida</td>
+                                <td>@m.QuantidadeSolicitada</td>
+                                <td>@m.Data.ToString("d")</td>
+                                <td>@m.Solicitante.Nome</td>
+                                <td>@m.Status</td>
+                                <td class="text-right">
+                                    @if (m.Status == StatusSolicitacao.Pendente)
+                                    {
+                                        <button class="btn btn-danger btn-sm js-negar-solicitacao" data-solicitacao-id="@m.Id">
+                                            <i class="fa fa-times"></i>Negar
+                                        </button>
+                                        <a class="btn btn-success btn-sm js-aprovar-solicitacao" data-solicitacao-id="@m.Id">
+                                            <i class="fa fa-check"></i>Aprovar
+                                        </a>
+                                    }
+                                    @if (User.IsInAnyRole(ErpRoleGroups.RolesCompras) &&
+                                      m.Status == StatusSolicitacao.Orcamentacao)
+                                    {
+                                        <a class="btn btn-outline-primary btn-sm js-adicionar-orcamento" data-solicitacao-id="@m.Id">
+                                            <i class="fa fa-plus"></i>Adicionar orçamento
+                                        </a>
+                                    }
+                                    @if (User.IsInAnyRole(ErpRoleNames.SuperAdmin, ErpRoleNames.SupervisorDeCompras) &&
+                                      m.IsDisponivelParaRealizarPedido())
+                                    {
+                                        <a class="btn btn-primary btn-sm js-aprovar-orcamento" data-solicitacao-id="@m.Id">
+                                            <i class="fa fa-check"></i>Aprovar orçamento
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>
@@ -64,62 +80,16 @@
     </div>
 </div>
 
+@* Container da modal de orçamentos para a solicitação *@
+<div class="modal fade" id="modal-orcamentos" tabindex="-1" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" id="modal-orcamentos-content">
+
+        </div>
+    </div>
+</div>
+
 @section Scripts
 {
-    <script>
-        
-        $(document).ready(function() {
-            $(".js-negar-solicitacao").click(function(e) {
-                var solicitacaoId = $(e.target).attr("data-solicitacao-id");
-                mudarStatusSolicitacao("Negar", solicitacaoId);
-            });
-
-            $(".js-aprovar-solicitacao").click(function(e) {
-                var solicitacaoId = $(e.target).attr("data-solicitacao-id");
-                mudarStatusSolicitacao("Aprovar", solicitacaoId);
-            });
-        });
-
-        function mudarStatusSolicitacao(status, id) {
-            var sendData = { "solicitacaoId": id };
-            var baseUrl = "/api/Solicitacao/" + status + "Solicitacao";
-
-            swal({
-                title: status +" solicitação?",
-                text: "Confirme a alteração na solicitação.",
-                type: "info",
-                showCancelButton: true,
-                confirmButtonText: "Sim, " + status.toLowerCase() + " a solicitação!",
-                cancelButtonText: "Não, cancele por favor!",
-                closeOnConfirm: false,
-                closeOnCancel: false
-            }, function (isConfirm) {
-                if (isConfirm) {
-                    $.ajax({
-                        url: baseUrl,
-                        type: 'POST',
-                        data: sendData,
-                        success: function () {
-                            swal({
-                                title: "Alterado!",
-                                text: "A solicitação foi alterada com sucesso.",
-                                type: "success"
-                            }, function (isConfirm) {
-                                location.reload();
-                            });
-                        },
-                        error: function () {
-                            swal({
-                                title: "Algo deu errado. :(",
-                                text: "Algo aconteceu enquanto a operação era executada.",
-                                type: "error"
-                            });
-                        }
-                    });
-                } else {
-                    swal("Cancelado", "A solicitação não foi alterada, não se preocupe. :)", "error");
-                }
-            });
-        }
-    </script>
+    <script src="js/pages/solicitacoes.js"></script>
 }
