@@ -14,5 +14,6 @@ namespace WebERP.ViewModels.ComprasViewModels
         public string Solicitante { get; set; }
 
         public IEnumerable<Orcamento> Orcamentos { get; set; }
+        public IEnumerable<Fornecedor> FornecedoresDisponiveis { get; set; }
     }
 }

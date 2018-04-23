@@ -66,5 +66,16 @@ namespace WebERP.Data.Repositories
             
             return solicitacoes.FirstOrDefault(e => e.Id == id);
         }
+
+        public void AdicionarOrcamentoParaSolicitacao(int solicitacaoId, Orcamento orcamento)
+        {
+            Solicitacao solicitacao = FindById(solicitacaoId);
+
+            if (solicitacao == null)
+                throw new ArgumentException("A solicitação não foi encontrada.");
+            
+            _context.Solicitacoes.Update(solicitacao);
+            _context.SaveChanges();
+        }
     }
 }

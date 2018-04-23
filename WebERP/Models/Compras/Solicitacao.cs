@@ -27,7 +27,7 @@ namespace WebERP.Models.Compras
         [Required]
         public float QuantidadeSolicitada { get; set; }
 
-        public virtual List<Orcamento> Orcamentos { get; set; } = new List<Orcamento>();
+        public virtual ICollection<Orcamento> Orcamentos { get; set; } = new List<Orcamento>();
         public virtual Produto Produto { get; set; }
         public StatusSolicitacao Status { get; private set; }
         public virtual ApplicationUser Solicitante { get; set; }

@@ -9,9 +9,9 @@ namespace WebERP.Data.Repositories
 {
     public abstract class BaseRepository<T> where T : class, IEntity  
     {
-        private readonly ApplicationDbContext _context;
-        private readonly DbSet<T> _dbSet;
-        private readonly IQueryable<T> _setNotTrackable;
+        protected readonly ApplicationDbContext _context;
+        protected readonly DbSet<T> _dbSet;
+        protected readonly IQueryable<T> _setNotTrackable;
 
         protected BaseRepository(ApplicationDbContext context)
         {

@@ -63,13 +63,6 @@
                                             <i class="fa fa-plus"></i>Adicionar orçamento
                                         </a>
                                     }
-                                    @if (User.IsInAnyRole(ErpRoleNames.SuperAdmin, ErpRoleNames.SupervisorDeCompras) &&
-                                      m.IsDisponivelParaRealizarPedido())
-                                    {
-                                        <a class="btn btn-primary btn-sm js-aprovar-orcamento" data-solicitacao-id="@m.Id">
-                                            <i class="fa fa-check"></i>Aprovar orçamento
-                                        </a>
-                                    }
                                 </td>
                             </tr>
                         }

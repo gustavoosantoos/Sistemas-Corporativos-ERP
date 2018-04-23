@@ -64,7 +64,7 @@
                                 <td class="text-center">
                                     @if (vm.Solicitacao != null)
                                     {
-                                        <span class="tipped-tooltip" style="@vm.CorParaStatus()" 
+                                        <span class="tipped-tooltip" style="@vm.CorParaStatus()"
                                               data-solicitante="@vm.Solicitacao.Solicitante.Nome"
                                               data-quantidade="@vm.Solicitacao.QuantidadeSolicitada"
                                               data-status="@vm.Solicitacao.Status">
@@ -159,9 +159,9 @@
                     title: "Última Solicitação",
                     content: content
                 };
-            }, {
-                    skin: 'light'
-                });
+            },{
+                skin: 'light'
+             });
         });
     </script>
 }

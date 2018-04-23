@@ -1,0 +1,66 @@
+﻿@model IEnumerable<WebERP.Models.Estoque.Fornecedor>
+@{
+    ViewData["Title"] = "Fornecedores";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="app-title">
+    <div>
+        <h1><i class="fa fa-truck"></i> Gerenciamento de Fornecedores</h1>
+        <p>Listagem, adição e gerenciamento de fornecedores.</p>
+    </div>
+    <ul class="app-breadcrumb breadcrumb">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item"><a href="#">Fornecedores</a></li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="tile">
+            <div class="tile-title-w-btn">
+                <h3 class="title">Fornecedores</h3>
+                <p><a class="btn btn-success icon-btn" asp-controller="Fornecedores" asp-action="Form"><i class="fa fa-plus"></i>Adicionar fornecedor</a></p>
+            </div>
+            <div class="tile-body">
+                <table class="table table-hover table-bordered table-responsive-lg" id="fornecedores-table">
+                    <thead>
+                    <tr>
+                        <th>Nome Fantasia</th>
+                        <th>CNPJ</th>
+                        <th>E-mail</th>
+                        <th>Telefone</th>
+                        <th>Ações</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var fornecedor in Model)
+                    {
+                        <tr>
+                            <td>@fornecedor.NomeFantasia</td>
+                            <td>@fornecedor.Cnpj</td>
+                            <td>@fornecedor.Email</td>
+                            <td>@fornecedor.Telefone?.ToString()</td>
+                            <td>
+                                <a class="btn btn-primary btn-sm" asp-action="Form" asp-route-id="@fornecedor.Id">
+                                    <i class="fa fa-pencil"></i>Editar
+                                </a>
+                                <button class="btn btn-danger btn-sm js-delete-fornecedor" data-user-id="@fornecedor.Id">
+                                    <i class="fa fa-trash"></i>Apagar
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script>
+        $('#fornecedores-table').DataTable();
+    </script>
+}

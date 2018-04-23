@@ -24,6 +24,6 @@ namespace WebERP.Models.Estoque
         public string Email { get; set; }
 
         public EnderecoFornecedor Endereco { get; set; }
-        public List<TelefoneFornecedor> Telefone { get; set; }
+        public TelefoneFornecedor Telefone { get; set; }
     }
 }

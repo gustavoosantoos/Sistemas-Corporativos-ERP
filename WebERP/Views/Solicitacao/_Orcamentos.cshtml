@@ -1,4 +1,6 @@
-﻿@model WebERP.ViewModels.ComprasViewModels.OrcamentoViewModel
+﻿@using WebERP.Extensions
+@using WebERP.Utils.Identity
+@model WebERP.ViewModels.ComprasViewModels.OrcamentoViewModel
 @{
 
 }
@@ -15,6 +17,7 @@
             Dados do Produto
         </div>
         <div class="card-body">
+            @Html.HiddenFor(e => e.Solicitacao.Id)
             <h5 class="card-title">Produto: @Model.Produto.Nome</h5>
             <table class="table table-sm table-bordered">
                 <thead>
@@ -28,10 +31,59 @@
                     <tr class="d-flex">
                         <td class="col-4">@Model.Produto.Descricao</td>
                         <td class="col-4">@Model.Produto.UnidadeDeMedida</td>
-                        <td class="col-4">@Model.Solicitacao.QuantidadeSolicitada</td>
+                        <td class="col-4" id="txtQuantidadeSolicitada">@Model.Solicitacao.QuantidadeSolicitada</td>
                     </tr>
                 </tbody>
             </table>
+
+            <h5 class="card-title">Novo Orçamento</h5>
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label class="control-label">Fornecedor</label>
+                    @Html.DropDownList("FornecedorId", (MultiSelectList)ViewBag.FornecedoresDisponiveis,
+                                  new { @class = "form-control js-select2-fornecedores" })
+                </div>
+                <div class="form-group col-md-4">
+                    <label class="control-label">Preço Unitário</label>
+                    <input type="text" id="txtPrecoUnitario" class="form-control" />
+                </div>
+                <div class="form-group col-md-4 align-self-end">
+                    <button class="btn btn-success" type="button" id="btn-adicionar-orcamento">
+                        <i class="fa fa-fw fa-lg fa-check-circle"></i>Adicionar orçamento
+                    </button>
+                </div>
+            </div>
+            <h5 class="card-title">Orçamentos</h5>
+            <div class="row">
+                <table class="table table-sm table-bordered js-table-orcamentos" id="table-orcamentos">
+                    <thead>
+                        <tr class="">
+                            <th class="col-3">Fornecedor</th>
+                            <th class="col-3">Preço Unitário</th>
+                            <th class="col-3">Preço Total</th>
+                            <th class="col-3">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var orcamento in Model.Orcamentos)
+                        {
+                            <tr class="">
+                                <td class="w-25">@orcamento.Fornecedor.RazaoSocial</td>
+                                <td class="w-25">@orcamento.PrecoUnitario.ToString("C")</td>
+                                <td class="w-25">@orcamento.PrecoTotal().ToString("C")</td>
+                                <td class="w-25">
+                                    @if (User.IsInAnyRole(ErpRoleNames.SuperAdmin, ErpRoleNames.SupervisorDeCompras))
+                                    {
+                                        <a class="btn btn-outline-primary btn-sm js-gerar-pedido" data-orcamento-id="@orcamento.Id">
+                                            <i class="fa fa-check"></i>Realizar Pedido
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div class="card-footer text-muted">
             Solicitado em: @Model.Solicitacao.Data.ToString("d") por @Model.Solicitante
@@ -39,6 +91,105 @@
     </div>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-    <button type="button" class="btn btn-primary">Save changes</button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+    @*<button type="button" class="btn btn-primary">Save changes</button>*@
 </div>
+
+<script>
+    (function () {
+        var dataTable = $(".js-table-orcamentos").DataTable();
+
+        $("#btn-adicionar-orcamento").click(function () {
+            var orcamento = {
+                "fornecedorId": $("#FornecedorId option:selected").val(),
+                "precoUnitario": $("#txtPrecoUnitario").val(),
+                "solicitacaoId": $("#Solicitacao_Id").val()
+            };
+
+            swal({
+                title: "Adicionar orçamento?",
+                text: "",
+                type: "info",
+                showCancelButton: true,
+                confirmButtonText: "Sim, adicione!",
+                cancelButtonText: "Não, cancele por favor!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            }, function (isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                        url: '/api/Solicitacao/AdicionarOrcamento',
+                        data: orcamento,
+                        type: 'POST',
+                        success: function (data) {
+                            swal({
+                                title: "Adicionado!",
+                                text: "O orçamento foi incluído com sucesso.",
+                                type: "success"
+                            }, function (isConfirm) {
+                                var fornecedor = $("#FornecedorId option:selected").text();
+                                var precoUnitario = $("#txtPrecoUnitario").val();
+                                var quantidade = $("#txtQuantidadeSolicitada").text();
+
+                                dataTable.row.add([
+                                    fornecedor,
+                                    "R$"+ parseFloat(precoUnitario).toFixed(2),
+                                    "R$"+ (precoUnitario * quantidade).toFixed(2).toString(),
+                                    "<a class='btn btn-outline-primary btn-sm js-aprovar-orcamento' data-orcamento-id='" + data.orcamentoId + "'><i class='fa fa-check'></i>Realizar Pedido</a>"]).draw(true);
+                            });
+                        },
+                        error: function () {
+                            swal({
+                                title: "Algo deu errado. :(",
+                                text: "Algo aconteceu enquanto a operação era executada.",
+                                type: "error"
+                            });
+                        }
+                    });
+                } else {
+                    swal("Cancelado", "O orçamento não foi adicionado, não se preocupe. :)", "error");
+                }
+            });
+        });
+
+        $(".js-gerar-pedido").click(function(e) {
+            var orcamentoId = $(e.target).attr("data-orcamento-id");
+
+            swal({
+                title: "Gerar pedido?",
+                text: "Ao realizar esta ação, a solicitação será aprovada e não poderá ser desfeita a ação.",
+                type: "info",
+                showCancelButton: true,
+                confirmButtonText: "Sim, gerar pedido!",
+                cancelButtonText: "Não, cancele por favor!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            }, function (isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                        url: '/api/Solicitacao/GerarPedido/' + orcamentoId,
+                        type: 'POST',
+                        success: function (data) {
+                            swal({
+                                title: "Pedido gerado!",
+                                text: "O pedido foi gerado com sucesso.",
+                                type: "success"
+                            }, function (isConfirm) {
+                                window.location = "/solicitacao";
+                            });
+                        },
+                        error: function () {
+                            swal({
+                                title: "Algo deu errado. :(",
+                                text: "Algo aconteceu enquanto a operação era executada.",
+                                type: "error"
+                            });
+                        }
+                    });
+                } else {
+                    swal("Cancelado", "O pedido não foi gerado, não se preocupe. :)", "error");
+                }
+            });
+        });
+    })();
+</script>

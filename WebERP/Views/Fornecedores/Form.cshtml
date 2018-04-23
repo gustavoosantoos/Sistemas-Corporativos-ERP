@@ -1,0 +1,119 @@
+﻿@model WebERP.Models.Estoque.Fornecedor
+@{
+    ViewData["Title"] = "Fornecedor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="app-title">
+    <div>
+        <h1><i class="fa fa-truck"></i> Adição de Fornecedores</h1>
+        <p>É nessa area que você adiciona/edita fornecedores.</p>
+    </div>
+    <ul class="app-breadcrumb breadcrumb">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item"><a asp-action="Index">Fornecedores</a></li>
+        <li class="breadcrumb-item">Adicionar</li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="tile">
+            <form asp-action="Form" method="post">
+                <h3 class="tile-title">Dados do Fornecedor</h3>
+                <div class="tile-body">
+                    <input asp-for="Id" type="hidden" value="@(Model?.Id ?? 0)" />
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label" asp-for="NomeFantasia"></label>
+                            <input class="form-control" type="text" asp-for="NomeFantasia">
+                            <span asp-validation-for="NomeFantasia" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label" asp-for="RazaoSocial"></label>
+                            <input class="form-control" type="text" asp-for="RazaoSocial">
+                            <span asp-validation-for="RazaoSocial" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="control-label" asp-for="Cnpj"></label>
+                            <input class="form-control" asp-for="Cnpj">
+                            <span asp-validation-for="Cnpj" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="control-label" asp-for="Email"></label>
+                            <input class="form-control" asp-for="Email">
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="control-label" asp-for="Telefone.Ddd"></label>
+                            <input class="form-control" asp-for="Telefone.Ddd">
+                            <span asp-validation-for="Telefone.Ddd" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="control-label" asp-for="Telefone.Numero"></label>
+                            <input class="form-control" asp-for="Telefone.Numero">
+                            <span asp-validation-for="Telefone.Numero" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label class="control-label" asp-for="Endereco.Cep"></label>
+                            <input class="form-control" asp-for="Endereco.Cep">
+                            <span asp-validation-for="Endereco.Cep" class="text-danger"></span>
+                        </div>                        
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="control-label" asp-for="Endereco.Logradouro"></label>
+                            <input class="form-control" asp-for="Endereco.Logradouro">
+                            <span asp-validation-for="Endereco.Logradouro" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label class="control-label" asp-for="Endereco.Cidade"></label>
+                            <input class="form-control" asp-for="Endereco.Cidade">
+                            <span asp-validation-for="Endereco.Cidade" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label class="control-label" asp-for="Endereco.Bairro"></label>
+                            <input class="form-control" asp-for="Endereco.Bairro">
+                            <span asp-validation-for="Endereco.Bairro" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label class="control-label" asp-for="Endereco.Estado"></label>
+                            <input class="form-control" asp-for="Endereco.Estado">
+                            <span asp-validation-for="Endereco.Estado" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="tile-footer">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fa fa-fw fa-lg fa-check-circle"></i>Salvar
+                    </button>&nbsp;&nbsp;&nbsp;
+                    <a class="btn btn-secondary" asp-action="Index"><i class="fa fa-fw fa-lg fa-times-circle"></i>Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
