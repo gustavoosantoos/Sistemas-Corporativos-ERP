@@ -17,8 +17,7 @@ namespace WebERP.Utils.Attributes
 
         public override bool IsValid(object value)
         {
-            var list = value as IList;
-            if (list != null)
+            if (value is IList list)
             {
                 return list.Count >= _minElements;
             }

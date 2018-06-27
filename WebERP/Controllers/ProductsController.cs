@@ -66,6 +66,13 @@ namespace WebERP.Controllers
             return RedirectToAction(actionName: nameof(Index));
         }
 
+
+        [HttpGet]
+        public IActionResult FichaInventario()
+        {
+            return View(_repository.ListAll());
+        }
+
         private void RegisterActivePage()
         {
             ViewBag.ProductActive = "active";

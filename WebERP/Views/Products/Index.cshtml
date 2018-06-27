@@ -21,6 +21,10 @@
         <div class="tile">
             <div class="tile-title-w-btn">
                 <h3 class="title">Produtos</h3>
+                @if (User.IsInRole("SuperAdmin") || User.IsInRole("SupervisorDeEstoque"))
+                {
+                    <p style="margin-left: auto"><a class="btn btn-default icon-btn" asp-controller="Products" asp-action="FichaInventario"><i class="fa fa-file-text"></i>Gerar ficha de inventário</a></p>
+                }
                 <p><a class="btn btn-success icon-btn" asp-controller="Products" asp-action="Form"><i class="fa fa-plus"></i>Adicionar Produto</a></p>
             </div>
             <div class="tile-body">

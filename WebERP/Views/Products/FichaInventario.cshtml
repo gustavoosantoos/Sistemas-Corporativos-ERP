@@ -1,0 +1,46 @@
+﻿@model IEnumerable<WebERP.Models.Estoque.Produto>
+@{
+    ViewData["Title"] = "FichaInventario";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row">
+    <div class="col-md-12">
+        <h1 class="text-center">Inventário de Estoque</h1>
+        <table class="table table-bordered table-border" >
+            <thead>
+                <tr class="text-center">
+                    <th colspan="2">Estoque no Sistema</th>
+                    <th colspan="2">Ficha de Invetário</th>
+                </tr>
+                <tr>
+                    <th>Produto</th>
+                    <th>Quantidade</th>
+                    <th>Produto</th>
+                    <th>Quantidade</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var produto in Model)
+                {
+                    <tr>
+                        <td>@produto.Nome</td>
+                        <td>@produto.Quantidade</td>
+                        <td>@produto.Nome</td>
+                        <td></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+    .table-border {
+        border: 2px solid black;
+    }
+
+        .table-border th, .table-border td {
+            border: 2px solid black !important;
+        }
+</style>
+
