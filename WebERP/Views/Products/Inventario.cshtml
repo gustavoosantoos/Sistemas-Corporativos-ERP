@@ -66,6 +66,7 @@
 
                 <div class="jumbotron hidden" id="inventario-response-container">
                     <h1 class="display-3" id="variacao-total-field">Jumbotron</h1>
+                    <p id="acuracia-estoque-field"></p>
                     <p>O estoque foi alterado com as quantidades atualizadas.</p>
                     <p><a class="btn btn-primary btn-lg" asp-action="Index">Voltar para produtos</a></p>
                 </div>
@@ -90,6 +91,7 @@
 
                 let tableRows = $("tbody tr");
                 let variacaoTotal = 0;
+                let itensSemVariacao = 0;
 
                 for (let row of tableRows) {
                     let varianciaField = row.children[row.children.length - 1];
@@ -99,23 +101,40 @@
 
                     variacaoTotal += Math.abs(variacaoRelativa);
 
-                    if (variacaoRelativa > 0) {
+                    if (parseFloat(variacaoRelativa) == parseFloat(0)) {
+                        itensSemVariacao += 1;
+                        varianciaField.innerText = `Variação: ${variacaoRelativa}%`;
+                    } else if (variacaoRelativa > 0) {
                         varianciaField.classList.add('text-success');
                         varianciaField.innerText = `Variação: ${variacaoRelativa}%`;
                     } else {
                         varianciaField.classList.add('text-danger');
                         varianciaField.innerText = `Variação: ${variacaoRelativa}%`;
                     }
-
-                    responseContainer.removeClass('hidden');
-                    $("#variacao-total-field").html(`Variação total: <strong>${variacaoTotal.toFixed(2)}%</strong>`)             
+                    atualizarQuantidade(produto);
                 }
+
+                responseContainer.removeClass('hidden');
+                $("#variacao-total-field").html(`Variação absoluta: <strong>${variacaoTotal.toFixed(2)}%</strong>`);
+
+                $("#acuracia-estoque-field").text(`Acurácia do estoque: ${calcularAcuracia(itensSemVariacao, tableRows.length)}%`);
             });
         });
 
         function calcularVariacao(produto) {
             let variacao = ((produto.quantidadeReal / produto.quantidadeSistema) * 100) - 100;
             return variacao.toFixed(2);
+        }
+
+        function atualizarQuantidade(produto) {
+            $.post("/api/Products/AtualizarQuantidade/" + produto.id + "/" + produto.quantidadeReal);
+        }
+
+        function calcularAcuracia(itensSemVariacao, itensInventariados) {
+            if (itensInventariados == 0)
+                return 100;
+
+            return ((itensSemVariacao / itensInventariados) * 100).toFixed(2);
         }
 
         function parseTrToProduct(row) {
