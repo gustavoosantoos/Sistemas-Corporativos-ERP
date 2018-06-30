@@ -66,6 +66,12 @@ namespace WebERP.Controllers
             return RedirectToAction(actionName: nameof(Index));
         }
 
+        [HttpGet]
+        public IActionResult Inventario()
+        {
+            return View(_repository.ListAll());
+        }
+
 
         [HttpGet]
         public IActionResult FichaInventario()

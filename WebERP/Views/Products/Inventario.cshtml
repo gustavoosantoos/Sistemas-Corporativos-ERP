@@ -1,0 +1,132 @@
+﻿@model IEnumerable<WebERP.Models.Estoque.Produto>
+@{
+    ViewData["Title"] = "Inventariacao";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="app-title">
+    <div>
+        <h1><i class="fa fa-list"></i> Inventariamento de Produtos</h1>
+        <p>Correções de estoque e relatórios..</p>
+    </div>
+    <ul class="app-breadcrumb breadcrumb">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item"><a asp-action="Index">Produtos</a></li>
+        <li class="breadcrumb-item"><a href="#">Inventário</a></li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="tile">
+            <div class="tile-title-w-btn">
+                <h3 class="title">Inventário</h3>
+                <p><a class="btn btn-outline-primary icon-btn" asp-controller="Products" asp-action="FichaInventario" target="_blank"><i class="fa fa-eye"></i>Gerar ficha para impressão</a></p>
+            </div>
+            <div class="tile-body">
+                <form action="/" method="post" id="form-inventario">
+                    <table class="table table-hover table-bordered table-responsive-lg" id="product-table">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Unidade de Medida</th>
+                                <th>Quantidade no Sistema</th>
+                                <th>Quantidade Real</th>
+                                <th>Variação relativa</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var produto in Model)
+                            {
+                                <tr>
+                                    <td class="hidden">@produto.Id</td>
+                                    <td>
+                                        <span data-toggle="tooltip" data-placement="top" title="@produto.Descricao">
+                                            @produto.Nome
+                                        </span>
+                                    </td>
+                                    <td>@produto.UnidadeDeMedida</td>
+                                    <td>@produto.Quantidade</td>
+                                    <td>
+                                        <input type="number" class="form-control" placeholder="Quantidade" step="0.01" style="display: inline-block" data-quantidade-sistema="@produto.Quantidade" required>
+                                    </td>
+                                    <td>Não calculado.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+
+                    <div class="col-xs-12" style="margin: 15px 0">
+                        <button class="btn btn-outline-primary btn-block js-salvar-inventario">
+                            Salvar alterações e gerar relatórios
+                        </button>
+                    </div>
+                </form>
+
+                <div class="jumbotron hidden" id="inventario-response-container">
+                    <h1 class="display-3" id="variacao-total-field">Jumbotron</h1>
+                    <p>O estoque foi alterado com as quantidades atualizadas.</p>
+                    <p><a class="btn btn-primary btn-lg" asp-action="Index">Voltar para produtos</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .hidden {
+        display: none;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            let responseContainer = $("#inventario-response-container");
+
+            $("#form-inventario").submit(function (e) {
+                e.preventDefault();
+
+                let tableRows = $("tbody tr");
+                let variacaoTotal = 0;
+
+                for (let row of tableRows) {
+                    let varianciaField = row.children[row.children.length - 1];
+
+                    let produto = parseTrToProduct(row);
+                    let variacaoRelativa = calcularVariacao(produto);
+
+                    variacaoTotal += Math.abs(variacaoRelativa);
+
+                    if (variacaoRelativa > 0) {
+                        varianciaField.classList.add('text-success');
+                        varianciaField.innerText = `Variação: ${variacaoRelativa}%`;
+                    } else {
+                        varianciaField.classList.add('text-danger');
+                        varianciaField.innerText = `Variação: ${variacaoRelativa}%`;
+                    }
+
+                    responseContainer.removeClass('hidden');
+                    $("#variacao-total-field").html(`Variação total: <strong>${variacaoTotal.toFixed(2)}%</strong>`)             
+                }
+            });
+        });
+
+        function calcularVariacao(produto) {
+            let variacao = ((produto.quantidadeReal / produto.quantidadeSistema) * 100) - 100;
+            return variacao.toFixed(2);
+        }
+
+        function parseTrToProduct(row) {
+            let product = {
+                id: row.children[0].innerText,
+                quantidadeSistema: row.children[3].innerText.replace(',', '.'),
+                quantidadeReal: row.children[4].children[0].value
+            };
+
+            return product;
+        }
+        
+    </script>
+}
