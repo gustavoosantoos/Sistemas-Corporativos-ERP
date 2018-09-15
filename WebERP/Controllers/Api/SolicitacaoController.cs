@@ -149,6 +149,24 @@ namespace WebERP.Controllers.Api
         }
 
         [HttpPost]
+        [Route("GerarPedido")]
+        public IActionResult GerarPedido(int idProduto, int quantidade)
+        {
+            if (quantidade <= 0)
+                return BadRequest("Quantidade solicitada inválida.");
+
+            Produto produto = _productRepository.FindById(idProduto);
+            if (produto == null)
+                return NotFound("Produto não encontado.");
+
+            produto.Quantidade += quantidade;
+            _productRepository.Save(produto);
+
+            return Ok();
+        }
+
+
+        [HttpPost]
         [Authorize(Roles = ErpRoleGroups.Compras)]
         [Route("NotificarSupervisores/{idSolicitacao}")]
         public IActionResult NotificarSupervisores(int? idSolicitacao)
