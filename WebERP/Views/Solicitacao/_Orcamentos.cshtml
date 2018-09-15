@@ -194,8 +194,40 @@
             });
         });
 
-        $(".btn-notificar-orcamentos").click(function (e) {
-
+        $("#btn-notificar-orcamentos").click(function (e) {
+            swal({
+                title: "Notificar supervisores?",
+                text: "",
+                type: "info",
+                showCancelButton: true,
+                confirmButtonText: "Sim, notifique!",
+                cancelButtonText: "Não, cancele por favor!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            }, function (isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                        url: '/api/Solicitacao/NotificarSupervisores/@Model.Solicitacao.Id',
+                        type: 'POST',
+                        success: function (data) {
+                            swal({
+                                title: "Sucesso!",
+                                text: "Notificação enviada com sucesso.",
+                                type: "success"
+                            });
+                        },
+                        error: function () {
+                            swal({
+                                title: "Algo deu errado. :(",
+                                text: "Algo aconteceu enquanto a operação era executada.",
+                                type: "error"
+                            });
+                        }
+                    });
+                } else {
+                    swal("Cancelado", "Cancelado com sucesso, não se preocupe. :)", "error");
+                }
+            });
         });
     })();
 </script>

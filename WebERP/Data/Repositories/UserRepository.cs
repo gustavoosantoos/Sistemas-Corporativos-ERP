@@ -108,5 +108,22 @@ namespace WebERP.Data.Repositories
         {
             AddClaim(user, new Claim(ClaimTypes.Role, ErpRoleNames.SuperAdmin));
         }
+
+        public IEnumerable<ApplicationUser> GetSupervisoresDeVendas()
+        {
+            var superAdminsTask = Manager.GetUsersForClaimAsync(new Claim(ClaimTypes.Role, ErpRoleNames.SuperAdmin));
+            var supervisoresTask = Manager.GetUsersForClaimAsync(new Claim(ClaimTypes.Role, ErpRoleNames.SupervisorDeCompras));
+
+            superAdminsTask.Wait();
+            supervisoresTask.Wait();
+
+            var distinctUsers = superAdminsTask.Result
+                .Concat(supervisoresTask.Result)
+                .GroupBy(u => u.Email)
+                .Select(g => g.First())
+                .ToList();
+
+            return distinctUsers;
+        }
     }
 }

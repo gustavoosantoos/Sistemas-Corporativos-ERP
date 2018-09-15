@@ -9,6 +9,7 @@ using WebERP.Models;
 using WebERP.Models.Compras;
 using WebERP.Models.Dto;
 using WebERP.Models.Estoque;
+using WebERP.Services;
 using WebERP.Utils.Identity;
 
 namespace WebERP.Controllers.Api
@@ -22,19 +23,21 @@ namespace WebERP.Controllers.Api
         private readonly SolicitacaoRepository _solicitacaoRepository;
         private readonly FornecedoresRepository _fornecedoresRepository;
         private readonly OrcamentosRepository _orcamentosRepository;
-
+        private readonly IEmailSender _emailService;
 
         public SolicitacaoController(
             CurrentUtils current, 
             ProductRepository productRepository,
             SolicitacaoRepository solicitacaoRepository, 
             FornecedoresRepository fornecedoresRepository,
-            OrcamentosRepository orcamentosRepository) : base(current)
+            OrcamentosRepository orcamentosRepository,
+            IEmailSender emailService) : base(current)
         {
             _productRepository = productRepository;
             _solicitacaoRepository = solicitacaoRepository;
             _fornecedoresRepository = fornecedoresRepository;
             _orcamentosRepository = orcamentosRepository;
+            _emailService = emailService;
         }
 
         [Authorize(Roles = ErpRoleGroups.Estoque)]
@@ -148,21 +151,36 @@ namespace WebERP.Controllers.Api
         [HttpPost]
         [Authorize(Roles = ErpRoleGroups.Compras)]
         [Route("NotificarSupervisores/{idSolicitacao}")]
-        public IActionResult NotificarSupervisores(int? id)
+        public IActionResult NotificarSupervisores(int? idSolicitacao)
         {
-            if (id == null)
+            if (idSolicitacao == null)
                 return BadRequest("Informe um id de solicitação válido.");
 
-            Solicitacao solicitacao = _solicitacaoRepository.FindById(id.Value);
+            Solicitacao solicitacao = _solicitacaoRepository.FindById(idSolicitacao.Value, includeProduto: true);
 
             if (solicitacao == null)
                 return NotFound("Solicitação não encontrada.");
 
-            IEnumerable<Orcamento> orcamentos = _orcamentosRepository.GetOrcamentosDaSolicitacao(id.Value);
+            IEnumerable<Orcamento> orcamentos = _orcamentosRepository.GetOrcamentosDaSolicitacao(idSolicitacao.Value);
 
             if (orcamentos.Count() > 0)
             {
+                var produto = solicitacao.Produto;
+                var mailTitle = "Novo orçamento pendente de avaliação.";
+                var mailMessage = "Você possui um novo orçamento para avaliar!<br /><br />" + 
+                                  $"<b>{produto.Descricao}</b>, quantidade solicitada: {produto.Quantidade} {produto.UnidadeDeMedida} <br /><br />";
+                
+                var orcamentosText = orcamentos
+                    .Select(o => $"<b>Fornecedor</b>: {o.Fornecedor.NomeFantasia}, preço unitário: {o.PrecoUnitario.ToString("c")}, preço total: {o.PrecoTotal().ToString("c")}.");
 
+                mailMessage += string.Join("<br />", orcamentosText);
+
+                var destinatarios = UserRepository
+                    .GetSupervisoresDeVendas()
+                    .Select(supervisor => supervisor.Email)
+                    .ToList();
+
+                destinatarios.ForEach(d => _emailService.SendEmailAsync(d, mailTitle, mailMessage));
             }
             
             return Ok();

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Threading.Tasks;
 
 namespace WebERP.Services
@@ -11,6 +13,30 @@ namespace WebERP.Services
     {
         public Task SendEmailAsync(string email, string subject, string message)
         {
+            var fromAddress = new MailAddress("gustavoosantoos95@gmail.com", "WebERP");
+            var toAddress = new MailAddress(email, email);
+            const string fromPassword = "blablabla";
+
+
+            var smtp = new SmtpClient
+            {
+                Host = "smtp.gmail.com",
+                Port = 587,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
+            };
+            using (var mailMessage = new MailMessage(fromAddress, toAddress)
+            {
+                Subject = subject,
+                Body = message,
+                IsBodyHtml = true
+            })
+            {
+                smtp.Send(mailMessage);
+            }
+
             return Task.CompletedTask;
         }
     }
