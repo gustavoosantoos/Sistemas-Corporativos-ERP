@@ -5,6 +5,13 @@
     <UserSecretsId>aspnet-WebERP-7CB711A1-FE4D-44DA-B381-6469F7FCB963</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Extensions\Identity\**" />
+    <Content Remove="Extensions\Identity\**" />
+    <EmbeddedResource Remove="Extensions\Identity\**" />
+    <None Remove="Extensions\Identity\**" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.2.2" />
@@ -46,10 +53,6 @@
     <None Include="wwwroot\lib\jquery\dist\jquery.js" />
     <None Include="wwwroot\lib\jquery\dist\jquery.min.js" />
     <None Include="wwwroot\lib\jquery\dist\jquery.min.map" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Extensions\Identity\" />
   </ItemGroup>
 
 </Project>

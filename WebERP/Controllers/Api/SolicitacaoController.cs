@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebERP.Data.Repositories;
@@ -139,6 +142,29 @@ namespace WebERP.Controllers.Api
             solicitacao.AprovarSolicitacaoFinalizada();
             _solicitacaoRepository.Save(solicitacao);
 
+            return Ok();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = ErpRoleGroups.Compras)]
+        [Route("NotificarSupervisores/{idSolicitacao}")]
+        public IActionResult NotificarSupervisores(int? id)
+        {
+            if (id == null)
+                return BadRequest("Informe um id de solicitação válido.");
+
+            Solicitacao solicitacao = _solicitacaoRepository.FindById(id.Value);
+
+            if (solicitacao == null)
+                return NotFound("Solicitação não encontrada.");
+
+            IEnumerable<Orcamento> orcamentos = _orcamentosRepository.GetOrcamentosDaSolicitacao(id.Value);
+
+            if (orcamentos.Count() > 0)
+            {
+
+            }
+            
             return Ok();
         }
     }

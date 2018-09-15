@@ -38,16 +38,19 @@
 
             <h5 class="card-title">Novo Orçamento</h5>
             <div class="row">
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-3">
                     <label class="control-label">Fornecedor</label>
                     @Html.DropDownList("FornecedorId", (MultiSelectList)ViewBag.FornecedoresDisponiveis,
                                   new { @class = "form-control js-select2-fornecedores" })
                 </div>
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-3">
                     <label class="control-label">Preço Unitário</label>
                     <input type="text" id="txtPrecoUnitario" class="form-control" />
                 </div>
-                <div class="form-group col-md-4 align-self-end">
+                <div class="form-group col-md-6 align-self-end">
+                    <button class="btn btn-default" type="button" id="btn-notificar-orcamentos" style="margin-right: 10px">
+                        <i class="fa fa-envelope"></i> Notificar
+                    </button>
                     <button class="btn btn-success" type="button" id="btn-adicionar-orcamento">
                         <i class="fa fa-fw fa-lg fa-check-circle"></i>Adicionar orçamento
                     </button>
@@ -92,7 +95,6 @@
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-    @*<button type="button" class="btn btn-primary">Save changes</button>*@
 </div>
 
 <script>
@@ -190,6 +192,10 @@
                     swal("Cancelado", "O pedido não foi gerado, não se preocupe. :)", "error");
                 }
             });
+        });
+
+        $(".btn-notificar-orcamentos").click(function (e) {
+
         });
     })();
 </script>
