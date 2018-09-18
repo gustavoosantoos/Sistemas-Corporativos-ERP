@@ -15,7 +15,7 @@ namespace WebERP.Services
         {
             var fromAddress = new MailAddress("gustavoosantoos95@gmail.com", "WebERP");
             var toAddress = new MailAddress(email, email);
-            const string fromPassword = "blablabla";
+            const string fromPassword = "05121995";
 
 
             var smtp = new SmtpClient

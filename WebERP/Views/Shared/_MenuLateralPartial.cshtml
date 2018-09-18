@@ -26,7 +26,7 @@
             <ul class="treeview-menu">
                 <li>
                     <a class="treeview-item" asp-controller="Users" asp-action="Index">
-                        <i class="icon fa fa-circle-o"></i>&nbsp;Usuários
+                        <i class="icon fa fa-circle"></i>&nbsp;Usuários
                     </a>
                 </li>
             </ul>
@@ -40,22 +40,46 @@
                 </a>
             </li>
         }
+
         @if (User.IsInAnyRole(ErpRoleGroups.RolesCompras))
         {
             <li class="treeview">
                 <a class="app-menu__item @ViewBag.ComprasActive" href="#" data-toggle="treeview">
-                    <i class="app-menu__icon fa fa-usd"></i>
+                    <i class="app-menu__icon fa fa-shopping-cart"></i>
                     <span class="app-menu__label">Compras</span><i class="treeview-indicator fa fa-angle-right"></i>
                 </a>
                 <ul class="treeview-menu">
                     <li>
                         <a class="treeview-item" asp-controller="Solicitacao" asp-action="Index">
-                            <i class="icon fa fa-circle-o"></i>&nbsp;Solicitações
+                            <i class="icon fa fa-circle"></i>&nbsp;Solicitações
                         </a>
                     </li>
                     <li>
                         <a class="treeview-item" asp-controller="Fornecedores" asp-action="Index">
-                            <i class="icon fa fa-circle-o"></i>&nbsp;Fornecedores
+                            <i class="icon fa fa-circle"></i>&nbsp;Fornecedores
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        }
+
+        @if (true)
+        {
+            <li class="treeview">
+                <a href="#" class="app-menu__item" data-toggle="treeview">
+                    <i class="app-menu__icon fa fa-usd"></i>
+                    <span class="app-menu__label">Vendas</span>
+                    <i class="treeview-indicator fa fa-angle-right"></i>
+                </a>
+                <ul class="treeview-menu">
+                    <li>
+                        <a class="treeview-item" asp-controller="Clientes">
+                            <i class="icon fa fa-circle"></i>&nbsp;Clientes
+                        </a>
+                    </li>
+                    <li>
+                        <a class="treeview-item" asp-controller="Vendas">
+                            <i class="icon fa fa-circle"></i>&nbsp;Vendas
                         </a>
                     </li>
                 </ul>
