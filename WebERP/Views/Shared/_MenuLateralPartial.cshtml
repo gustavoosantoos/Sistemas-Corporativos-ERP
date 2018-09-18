@@ -63,7 +63,7 @@
             </li>
         }
 
-        @if (true)
+        @if (User.IsInAnyRole(ErpRoleGroups.RolesVendas))
         {
             <li class="treeview">
                 <a href="#" class="app-menu__item" data-toggle="treeview">
