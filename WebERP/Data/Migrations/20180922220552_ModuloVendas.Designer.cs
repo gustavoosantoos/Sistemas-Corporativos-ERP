@@ -12,9 +12,10 @@ using WebERP.Models.Compras;
 namespace WebERP.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180922220552_ModuloVendas")]
+    partial class ModuloVendas
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -407,8 +408,6 @@ namespace WebERP.Data.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<int?>("ClienteId");
-
-                    b.Property<DateTime>("DataHoraVenda");
 
                     b.HasKey("Id");
 

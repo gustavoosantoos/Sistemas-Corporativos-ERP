@@ -9,6 +9,7 @@ using WebERP.Models;
 using WebERP.Models.Clientes;
 using WebERP.Models.Compras;
 using WebERP.Models.Estoque;
+using WebERP.Models.Vendas;
 
 namespace WebERP.Data
 {
@@ -30,6 +31,8 @@ namespace WebERP.Data
         public DbSet<Pedido> Pedidos { get; set; }
 
         public DbSet<Cliente> Clientes { get; set; }
+        public DbSet<ProdutoVenda> ProdutosVenda { get; set; }
+        public DbSet<Venda> Vendas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
