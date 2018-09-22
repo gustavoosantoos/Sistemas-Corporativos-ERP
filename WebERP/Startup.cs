@@ -45,6 +45,7 @@ namespace WebERP
             services.AddTransient<SolicitacaoRepository>();
             services.AddTransient<FornecedoresRepository>();
             services.AddTransient<OrcamentosRepository>();
+            services.AddTransient<ClientesRepository>();
             services.AddTransient<CurrentUtils>();
 
             services.AddAutoMapper();

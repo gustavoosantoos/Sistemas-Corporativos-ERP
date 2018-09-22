@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using WebERP.Models;
+using WebERP.Models.Clientes;
 using WebERP.Models.Compras;
 using WebERP.Models.Estoque;
 
@@ -27,6 +28,8 @@ namespace WebERP.Data
         public DbSet<Solicitacao> Solicitacoes { get; set; }
         public DbSet<Orcamento> Orcamentos { get; set; }
         public DbSet<Pedido> Pedidos { get; set; }
+
+        public DbSet<Cliente> Clientes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -1,0 +1,60 @@
+﻿@model WebERP.Models.Clientes.Cliente
+@{
+    ViewData["Title"] = "Clientes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="app-title">
+    <div>
+        <h1><i class="fa fa-users"></i> Adição de Clientes</h1>
+        <p>É nessa area que você adiciona/edita clientes.</p>
+    </div>
+    <ul class="app-breadcrumb breadcrumb">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item"><a asp-action="Index">Clientes</a></li>
+        <li class="breadcrumb-item">Adicionar</li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="tile">
+            <form asp-action="Form" method="post">
+                <h3 class="tile-title">Dados do Clientes</h3>
+                <div class="tile-body">
+                    <input asp-for="Id" type="hidden" value="@(Model?.Id ?? 0)" />
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="control-label" asp-for="Nome"></label>
+                            <input class="form-control" type="text" asp-for="Nome">
+                            <span asp-validation-for="Nome" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="control-label" asp-for="Sobrenome"></label>
+                            <input class="form-control" type="text" asp-for="Sobrenome">
+                            <span asp-validation-for="Sobrenome" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="control-label" asp-for="Email"></label>
+                            <input class="form-control" asp-for="Email">
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+           
+                <div class="tile-footer">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fa fa-fw fa-lg fa-check-circle"></i>Salvar
+                    </button>&nbsp;&nbsp;&nbsp;
+                    <a class="btn btn-secondary" asp-action="Index"><i class="fa fa-fw fa-lg fa-times-circle"></i>Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
