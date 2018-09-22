@@ -29,7 +29,8 @@
                         <tr>
                             <th>Nome cliente</th>
                             <th>Contato cliente</th>
-                            <th>Valor da venda</th>
+                            <th>Valor Total</th>
+                            <th>Data e hora</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -40,13 +41,11 @@
                                 <td>@venda.Cliente.Nome  @venda.Cliente.Sobrenome</td>
                                 <td>@venda.Cliente.Email</td>
                                 <td>@venda.ValorTotal</td>
+                                <td>@venda.DataHoraVenda</td>
                                 <td class="text-right">
                                     <a class="btn btn-primary btn-sm" asp-action="Form" asp-route-id="@venda.Id">
-                                        <i class="fa fa-pencil"></i>Editar
+                                        <i class="fa fa-file-text-o"></i>Detalhes
                                     </a>
-                                    <button class="btn btn-danger btn-sm js-delete-cliente" data-user-id="@venda.Id">
-                                        <i class="fa fa-trash"></i>Apagar
-                                    </button>
                                 </td>
                             </tr>
                         }

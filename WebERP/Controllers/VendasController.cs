@@ -17,7 +17,13 @@ namespace WebERP.Controllers
 
         public IActionResult Index()
         {
+            RegisterActivePage();
             return View(_repository.ListAll());
+        }
+
+        private void RegisterActivePage()
+        {
+            ViewBag.ClienteActive = "active";
         }
     }
 }
