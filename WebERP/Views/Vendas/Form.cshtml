@@ -19,99 +19,97 @@
 <div class="row">
     <div class="col-md-12">
         <div class="tile">
-            <form asp-action="Form" method="post">
-                <h3 class="tile-title">Dados da venda</h3>
-                <div class="tile-body">
-                    <h5>Dados do cliente</h5>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="control-label">Cliente</label>
-                                @Html.DropDownList("ClienteId", (MultiSelectList) ViewBag.Clientes,
-                                    new { @class="form-control js-select2-clientes"})
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="control-label">Contato</label>
-                                <input class="form-control" type="text" id="contato-cliente" readonly>
-                            </div>
+            <h3 class="tile-title">Dados da venda</h3>
+            <div class="tile-body">
+                <h5>Dados do cliente</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Cliente</label>
+                            @Html.DropDownList("ClienteId", (MultiSelectList) ViewBag.Clientes,
+                                new { @class="form-control js-select2-clientes"})
                         </div>
                     </div>
-                    <h5>Produtos</h5>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label class="control-label">Produto</label>
-                                @Html.DropDownList("ProdutoId", (MultiSelectList) ViewBag.Produtos,
-                                    new { @class="form-control js-select2-produtos"})
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label class="control-label">Quantidade disponível</label>
-                                <input class="form-control" type="text" id="quantidade-disponivel" readonly>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label class="control-label">Quantidade vendida</label>
-                                <input type="text" class="form-control" id="quantidade" />
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label class="control-label">Valor unitário</label>
-                                <input type="text" class="form-control" id="valor-unitario" />
-                            </div>
-                        </div>
-                        <div class="col-md-3 align-self-center">
-                            <span id="valor-total-produto" class="badge badge-success float-left" style="font-size: 18pt; margin-right: 10px"></span>
-                            <button class="btn btn-default js-adicionar-produto" type="button">Adicionar</button>
-                        </div>
-                    </div>
-
-                    <div style="margin-top: 30px">
-                        <h5>Itens da venda</h5>
-
-                        <table class="table table-hover table-bordered table-responsive-lg" id="table-itens-venda">
-                            <thead>
-                                <tr>
-                                    <th>Código Produto</th>
-                                    <th>Produto</th>
-                                    <th>Quantidade</th>
-                                    <th>Valor</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-
-                        <table class="table table-hover table-bordered table-responsive-lg text-right" id="table-totais-venda">
-                            <thead>
-                                <tr>
-                                    <th>Total da venda</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th>
-                                        <span class="badge badge-success" style="font-size: 18pt; margin-right: 10px">0</span>
-                                    </th>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <button class="btn btn-default js-orcamento-cliente btn-block">Enviar orçamento para cliente</button>
-                            </div>
-                            <div class="col-md-6">
-                                <button class="btn btn-success js-efetivar-venda  btn-block">Efetivar venda</button>
-                            </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Contato</label>
+                            <input class="form-control" type="text" id="contato-cliente" readonly>
                         </div>
                     </div>
                 </div>
-            </form>
+                <h5>Produtos</h5>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="control-label">Produto</label>
+                            @Html.DropDownList("ProdutoId", (MultiSelectList) ViewBag.Produtos,
+                                new { @class="form-control js-select2-produtos"})
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label class="control-label">Quantidade disponível</label>
+                            <input class="form-control" type="text" id="quantidade-disponivel" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label class="control-label">Quantidade vendida</label>
+                            <input type="text" class="form-control" id="quantidade" />
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label class="control-label">Valor unitário</label>
+                            <input type="text" class="form-control" id="valor-unitario" />
+                        </div>
+                    </div>
+                    <div class="col-md-3 align-self-center">
+                        <span id="valor-total-produto" class="badge badge-success float-left" style="font-size: 18pt; margin-right: 10px"></span>
+                        <button class="btn btn-default js-adicionar-produto" type="button">Adicionar</button>
+                    </div>
+                </div>
+
+                <div style="margin-top: 30px">
+                    <h5>Itens da venda</h5>
+
+                    <table class="table table-hover table-bordered table-responsive-lg" id="table-itens-venda">
+                        <thead>
+                            <tr>
+                                <th>Código Produto</th>
+                                <th>Produto</th>
+                                <th>Quantidade</th>
+                                <th>Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+
+                    <table class="table table-hover table-bordered table-responsive-lg text-right" id="table-totais-venda">
+                        <thead>
+                            <tr>
+                                <th>Total da venda</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th>
+                                    <span class="badge badge-success" style="font-size: 18pt; margin-right: 10px">0</span>
+                                </th>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <button class="btn btn-default js-orcamento-cliente btn-block">Enviar orçamento para cliente</button>
+                        </div>
+                        <div class="col-md-6">
+                            <button class="btn btn-success js-efetivar-venda btn-block">Efetivar venda</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -151,7 +149,6 @@
                 let produtoId = $($(".js-select2-produtos :selected")[0]).val();
 
                 $.get(`/api/Products/${produtoId}`, function (data) {
-                    console.log(data);
                     $("#quantidade-disponivel").val(data.quantidade);
                     $("#valor-total-produto").text("R$ " + ($("#valor-unitario").val() * $("#quantidade").val()).toFixed(2));
                 });
@@ -161,7 +158,6 @@
                 let produtoId = $($(".js-select2-produtos :selected")[0]).val();
 
                 $.get(`/api/Products/${produtoId}`, function (data) {
-                    console.log(data);
                     $("#quantidade-disponivel").val(data.quantidade);
                     $("#valor-total-produto").text("R$ " + ($("#valor-unitario").val() * $("#quantidade").val()).toFixed(2));
                 });
@@ -186,6 +182,51 @@
 
                 $("#quantidade").val("");
                 $("#valor-unitario").val("");
+            });
+
+
+            function getVenda() {
+                let clienteId = $($(".js-select2-clientes :selected")[0]).val();
+                var vendas = [];
+
+                $("#table-itens-venda > tbody > tr").each(function () {
+                    vendas.push({
+                        produtoId: $($(this).find("td")[0]).text(),
+                        quantidade: $($(this).find("td")[2]).text(),
+                        precoUnitario: parseFloat($($(this).find("td")[3]).text()) / parseFloat($($(this).find("td")[2]).text())
+                    });
+                });
+
+                var venda = {
+                    clienteId: clienteId,
+                    produtos: vendas
+                };
+
+                return venda;
+            }
+
+            $(".js-efetivar-venda").click(function (e) {
+                let venda = getVenda();
+                $.ajax({
+                    url: "/api/Vendas",
+                    data: venda,
+                    method: "POST",
+                    success: function (data) {
+                        window.location = "/Vendas";
+                    }
+                });
+            });
+
+            $(".js-orcamento-cliente").click(function (e) {
+                let venda = getVenda();
+                $.ajax({
+                    url: "/api/Vendas/notificar",
+                    data: venda,
+                    method: "POST",
+                    success: function (data) {
+
+                    }
+                });
             });
         });
     </script>
