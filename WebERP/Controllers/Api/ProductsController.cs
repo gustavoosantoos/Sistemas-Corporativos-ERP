@@ -36,5 +36,16 @@ namespace WebERP.Controllers.Api
             this._productRepository.Save(produto);
             return Ok();
         }
+
+        [HttpGet]
+        [Route("{id}")]
+        public IActionResult Get(int id)
+        {
+            var produto = _productRepository.FindById(id);
+            if (produto == null)
+                return NotFound();
+
+            return Ok(produto);
+        }
     }
 }

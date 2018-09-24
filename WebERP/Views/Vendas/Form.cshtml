@@ -1,0 +1,192 @@
+﻿@model WebERP.Models.Vendas.Venda
+@{
+    ViewData["Title"] = "Form";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="app-title">
+    <div>
+        <h1><i class="fa fa-truck"></i> Registro de vendas</h1>
+        <p>É nessa area que você adiciona/edita vendas.</p>
+    </div>
+    <ul class="app-breadcrumb breadcrumb">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item"><a asp-action="Index">Vendas</a></li>
+        <li class="breadcrumb-item">Venda</li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="tile">
+            <form asp-action="Form" method="post">
+                <h3 class="tile-title">Dados da venda</h3>
+                <div class="tile-body">
+                    <h5>Dados do cliente</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label">Cliente</label>
+                                @Html.DropDownList("ClienteId", (MultiSelectList) ViewBag.Clientes,
+                                    new { @class="form-control js-select2-clientes"})
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label">Contato</label>
+                                <input class="form-control" type="text" id="contato-cliente" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <h5>Produtos</h5>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="control-label">Produto</label>
+                                @Html.DropDownList("ProdutoId", (MultiSelectList) ViewBag.Produtos,
+                                    new { @class="form-control js-select2-produtos"})
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label class="control-label">Quantidade disponível</label>
+                                <input class="form-control" type="text" id="quantidade-disponivel" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label class="control-label">Quantidade vendida</label>
+                                <input type="text" class="form-control" id="quantidade" />
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label class="control-label">Valor unitário</label>
+                                <input type="text" class="form-control" id="valor-unitario" />
+                            </div>
+                        </div>
+                        <div class="col-md-3 align-self-center">
+                            <span id="valor-total-produto" class="badge badge-success float-left" style="font-size: 18pt; margin-right: 10px"></span>
+                            <button class="btn btn-default js-adicionar-produto" type="button">Adicionar</button>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 30px">
+                        <h5>Itens da venda</h5>
+
+                        <table class="table table-hover table-bordered table-responsive-lg" id="table-itens-venda">
+                            <thead>
+                                <tr>
+                                    <th>Código Produto</th>
+                                    <th>Produto</th>
+                                    <th>Quantidade</th>
+                                    <th>Valor</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+
+                        <table class="table table-hover table-bordered table-responsive-lg text-right" id="table-totais-venda">
+                            <thead>
+                                <tr>
+                                    <th>Total da venda</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>
+                                        <span class="badge badge-success" style="font-size: 18pt; margin-right: 10px">0</span>
+                                    </th>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button class="btn btn-default js-orcamento-cliente btn-block">Enviar orçamento para cliente</button>
+                            </div>
+                            <div class="col-md-6">
+                                <button class="btn btn-success js-efetivar-venda  btn-block">Efetivar venda</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts
+    {
+    <script>
+        $(document).ready(function () {
+            $('.js-select2-clientes').select2({
+                width: '100%'
+            });
+
+            $('.js-select2-clientes').on("select2:select", function (e) {
+                let clienteId = $($(".js-select2-clientes :selected")[0]).val();
+
+                $.get(`/api/Clientes/${clienteId}`, function (data) {
+                    console.log(data);
+                    $("#contato-cliente").val(data.email);
+                });
+            });
+
+            $('.js-select2-produtos').select2({
+                width: '100%'
+            });
+
+            $('.js-select2-produtos').on("select2:select", function (e) {
+                let produtoId = $($(".js-select2-produtos :selected")[0]).val();
+
+                $.get(`/api/Products/${produtoId}`, function (data) {
+                    console.log(data);
+                    $("#quantidade-disponivel").val(data.quantidade);
+                });
+            });
+
+            $("#quantidade").on('change', function () {
+                let produtoId = $($(".js-select2-produtos :selected")[0]).val();
+
+                $.get(`/api/Products/${produtoId}`, function (data) {
+                    console.log(data);
+                    $("#quantidade-disponivel").val(data.quantidade);
+                    $("#valor-total-produto").text("R$ " + ($("#valor-unitario").val() * $("#quantidade").val()).toFixed(2));
+                });
+            });
+
+            $("#valor-unitario").on('change', function () {
+                let produtoId = $($(".js-select2-produtos :selected")[0]).val();
+
+                $.get(`/api/Products/${produtoId}`, function (data) {
+                    console.log(data);
+                    $("#quantidade-disponivel").val(data.quantidade);
+                    $("#valor-total-produto").text("R$ " + ($("#valor-unitario").val() * $("#quantidade").val()).toFixed(2));
+                });
+            });
+
+            $(".js-adicionar-produto").click(function () {
+                var produtoId = $($(".js-select2-produtos :selected")[0]).val();
+                var produtoText = $($(".js-select2-produtos :selected")[0]).text();
+                var quantidade = $("#quantidade").val();
+                var valorProduto = parseFloat(($("#valor-unitario").val() * $("#quantidade").val()).toFixed(2));
+
+                $("#table-itens-venda > tbody").append(`<tr><td>${produtoId}</td><td>${produtoText}</td><td>${quantidade}</td><td>${valorProduto}</td></tr>`);
+
+                $("#table-totais-venda > tbody").html("");
+
+                var somaProdutos = 0;
+                $("#table-itens-venda > tbody > tr").each(function () {
+                    somaProdutos += parseFloat($(this).find("td").last().text());
+                });
+
+                $("#table-totais-venda > tbody").html(`<tr><td><span class="badge badge-success" style="font-size: 18pt; margin-right: 10px">${somaProdutos}</span></td></tr>`);
+
+                $("#quantidade").val("");
+                $("#valor-unitario").val("");
+            });
+        });
+    </script>
+}
